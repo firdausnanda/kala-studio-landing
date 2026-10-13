@@ -3861,7 +3861,11 @@
             <p class="lead" data-t="st.p">Tell us how your work runs today. A few sentences is enough.</p>
             <p class="mail"><a href="mailto:team@kalastudioai.com">team@kalastudioai.com</a></p>
           </div>
-          <form id="form" novalidate>
+          <form id="form" action="https://formsubmit.co/team@kalastudioai.com" method="POST" novalidate>
+            <input type="hidden" name="_subject" value="New Project Inquiry — Kala Studio">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
             <div class="f"><label for="f-name" data-t="fl1">Name</label><input id="f-name" name="name"
                 autocomplete="name" required></div>
             <div class="f"><label for="f-email" data-t="fl2">Email</label><input id="f-email" name="email" type="email"
@@ -3875,7 +3879,7 @@
               <p class="fnote"><span data-t="note">Goes to team@kalastudioai.com. Used only to reply to you.</span>
                 <span data-t="cons">By sending, you agree to our</span> <a href="privacy.html" data-t="cons.l">Privacy
                   Policy</a>.</p>
-              <p class="sent" role="status" hidden data-t="sent">Concept only: nothing was sent.</p>
+              <p class="sent" role="status" aria-live="polite" hidden data-t="sent">Message sent. We will reply to your email soon.</p>
             </div>
           </form>
         </div>
@@ -3955,7 +3959,7 @@
         'f6.q': 'Apa yang terjadi setelah rilis?', 'f6.a': 'Kami lihat cara sistemnya dipakai, lalu putuskan langkah berikutnya bersama Anda.',
         'st.h': 'Mulai proyek.', 'st.p': 'Ceritakan bagaimana pekerjaan Anda berjalan hari ini. Beberapa kalimat sudah cukup.',
         'fl1': 'Nama', 'fl2': 'Email', 'fl3': 'Organisasi', 'opt': '(opsional)', 'fl4': 'Apa yang Anda butuhkan?', 'ph': 'Pesanan masuk lewat chat, stok dicatat di spreadsheet…',
-        'send': 'Kirim', 'note': 'Dikirim ke team@kalastudioai.com. Hanya dipakai untuk membalas Anda.', 'sent': 'Hanya konsep: tidak ada yang terkirim.',
+        'send': 'Kirim', 'note': 'Dikirim ke team@kalastudioai.com. Hanya dipakai untuk membalas Anda.', 'sent': 'Pesan terkirim. Kami akan segera membalas ke email Anda.',
         'legal': 'PT Kala Studio Digital · Trenggalek, Jawa Timur, Indonesia', 'ft.p': 'Software custom, dirancang dan dibangun oleh satu tim.', 'ft.contact': 'Kontak', 'ft.loc': 'Trenggalek, Jawa Timur, Indonesia', 'ft.priv': 'Privasi', 'ft.terms': 'Syarat', 'cons': 'Dengan mengirim, Anda menyetujui', 'cons.l': 'Kebijakan Privasi kami',
         'exs': 'Contoh', 'sc.t': 'Chat tim · Trenggalek', 'sc.m1a': 'Staf · 09.10', 'sc.m1': 'Kertas printer hampir habis. Kami butuh 10 rim.', 'sc.m2a': 'Sistem · 09.12', 'sc.m2': 'Permintaan PR-1042 dibuat. Menunggu manajer cabang.',
         'sr.t': 'aturan-persetujuan', 'sr.1': 'saat', 'sr.2': 'permintaan diajukan', 'sr.3': 'minta persetujuan manajer cabang', 'sr.4': 'lalu kirim ke bagian pembelian', 'sr.5': 'pukul 17.00 masuk ringkasan chat', 'sr.6': '# proses Anda, dituliskan',
@@ -4112,11 +4116,56 @@
         });
         document.fonts && document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
       }
-      /* concept form: validate, never send */
+      /* contact form: send via FormSubmit AJAX with mailto fallback */
       document.getElementById('form').addEventListener('submit', function (e) {
         e.preventDefault();
         var f = e.target; if (!f.checkValidity()) { f.reportValidity(); return; }
-        f.querySelector('.sent').hidden = false;
+        var honey = f.querySelector('[name="_honey"]');
+        if (honey && honey.value) return;
+        var btn = f.querySelector('button[type="submit"]'), sentEl = f.querySelector('.sent');
+        var name = f.elements['name'].value.trim(), email = f.elements['email'].value.trim(),
+          org = f.elements['org'].value.trim(), msg = f.elements['msg'].value.trim();
+        var id = lang === 'id';
+        btn.disabled = true;
+        btn.textContent = id ? 'Mengirim…' : 'Sending…';
+        sentEl.hidden = true;
+        var subj = (id ? 'Proyek Baru — ' : 'New Project — ') + name + (org ? ' (' + org + ')' : '');
+        fetch('https://formsubmit.co/ajax/team@kalastudioai.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            organization: org || '-',
+            message: msg,
+            _subject: subj,
+            _replyto: email,
+            _template: 'table',
+            _captcha: 'false'
+          })
+        }).then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        }).then(function (data) {
+          if (data && (data.success === 'false' || data.success === false)) throw new Error(data.message || 'Not sent');
+          sentEl.textContent = id ? ID['sent'] : EN['sent'];
+          sentEl.hidden = false;
+          f.reset();
+        }).catch(function () {
+          var bodyLines = [
+            (id ? 'Nama: ' : 'Name: ') + name,
+            'Email: ' + email,
+            (id ? 'Organisasi: ' : 'Organization: ') + (org || '-'),
+            '',
+            msg
+          ];
+          window.location.href = 'mailto:team@kalastudioai.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+          sentEl.textContent = id ? 'Membuka aplikasi email Anda untuk mengirim ke team@kalastudioai.com…' : 'Opening your email app to send to team@kalastudioai.com…';
+          sentEl.hidden = false;
+        }).finally(function () {
+          btn.disabled = false;
+          btn.textContent = id ? ID['send'] : EN['send'];
+        });
       });
     })();
   </script>
