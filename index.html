@@ -1,0 +1,4092 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kala Studio — Software that follows your process</title>
+  <meta name="color-scheme" content="dark">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <style>
+    /* Konsep Beranda — arah B (DESIGN_DIRECTION.md). Copy: docs/COPY.md (draf, perlu disetujui Kala). */
+    :root {
+      color-scheme: dark;
+      --base: #16110F;
+      --raised: #1D1714;
+      --over: #251E1A;
+      --hover: #2B231F;
+      --line: #352C27;
+      --control: #7D716A;
+      --text: #F3EEEA;
+      --muted: #A89E97;
+      --accent: #9C413D;
+      --accent-hover: #B04A45;
+      --accent-text: #E4927F;
+      --focus: #E4927F;
+      --ok-bg: hsl(140 30% 24% / .6);
+      --ok: #A8D8B4;
+      --wait-bg: hsl(38 60% 30% / .5);
+      --wait: #F1C98A;
+      --font: "Plus Jakarta Sans", system-ui, sans-serif;
+      --fs-display: clamp(2.25rem, 1rem + 4vw, 4.25rem);
+      --fs-h2: clamp(1.875rem, 1.2rem + 2.2vw, 3rem);
+      --fs-h3: 1.25rem;
+      --fs-lead: 1.125rem;
+      --fs-body: 1rem;
+      --fs-small: .8125rem;
+      --gutter: clamp(16px, 4vw, 40px);
+      --max: 1200px;
+      --section: clamp(88px, 11vw, 144px);
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --r-pill: 999px;
+      --inner: inset 0 1px 0 hsl(0 0% 100% / .05);
+      --wash: radial-gradient(closest-side, hsl(3 44% 42% / .18), transparent);
+      --ease: cubic-bezier(.2, 0, 0, 1);
+      --d-press: 120ms;
+      --d-ui: 240ms;
+      --d-hover: 700ms;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+      scroll-padding-top: 72px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    body {
+      margin: 0;
+      background: var(--base);
+      color: var(--text);
+      font: 400 var(--fs-body)/1.6 var(--font);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      font-weight: 600;
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+    }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding-inline: var(--gutter);
+    }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .ic {
+      width: 16px;
+      height: 16px;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: var(--r-pill);
+      background: var(--accent);
+      color: #fff;
+      font: 600 15px/1 var(--font);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color var(--d-press) var(--ease), transform var(--d-press) var(--ease);
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .tag {
+      font-size: 11px;
+      font-style: normal;
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+      background: var(--base);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .concept {
+      position: fixed;
+      left: 12px;
+      bottom: 12px;
+      z-index: 60;
+      font: 600 11px/1 var(--font);
+      background: var(--text);
+      color: var(--base);
+      padding: 7px 10px;
+      border-radius: 6px;
+    }
+
+    /* NAV — solid, tanpa kaca */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--base);
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--d-ui) var(--ease);
+    }
+
+    .nav.scrolled {
+      border-color: var(--line);
+    }
+
+    .nav .wrap {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      height: 68px;
+    }
+
+    .wm {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-weight: 700;
+      font-size: 19px;
+      letter-spacing: -.03em;
+      text-decoration: none;
+    }
+
+    .links {
+      margin-left: auto;
+      display: flex;
+      gap: 22px;
+      font-size: 15px;
+    }
+
+    .links a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 12px 0;
+      transition: color var(--d-press);
+    }
+
+    .links a:hover {
+      color: var(--text);
+    }
+
+    .lang {
+      display: inline-flex;
+      padding: 2px;
+      border-radius: var(--r-pill);
+      background: var(--raised);
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+
+    .lang button {
+      position: relative;
+      min-width: 34px;
+      height: 28px;
+      padding: 0 9px;
+      border: 0;
+      border-radius: var(--r-pill);
+      background: none;
+      color: var(--muted);
+      font: 600 11.5px/1 var(--font);
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: background-color var(--d-press) var(--ease), color var(--d-press) var(--ease);
+    }
+
+    .lang button::after {
+      content: "";
+      position: absolute;
+      inset: -8px -3px;
+    }
+
+    /* hit area 44px tall, visual stays small */
+    .lang button:hover {
+      color: var(--text);
+    }
+
+    .lang button[aria-pressed="true"] {
+      background: var(--hover);
+      color: var(--text);
+    }
+
+    .nav .btn {
+      min-height: 44px;
+      padding: 0 18px;
+      font-size: 14px;
+    }
+
+    /* HERO */
+    .hero {
+      padding-top: clamp(56px, 9vw, 120px);
+      overflow-x: clip;
+    }
+
+    .hero h1 {
+      font-size: var(--fs-display);
+      line-height: 1.04;
+      letter-spacing: -.04em;
+      max-width: 20ch;
+    }
+
+    .hero-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .hero-row p {
+      margin: 0;
+      color: var(--muted);
+      font-size: var(--fs-lead);
+    }
+
+    .frame {
+      position: relative;
+      margin-top: clamp(40px, 6vw, 72px);
+      background: var(--raised);
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+      padding: 8px 8px 0;
+      box-shadow: var(--inner);
+    }
+
+    .frame::before {
+      content: "";
+      position: absolute;
+      inset: -80px 10% auto;
+      height: 240px;
+      z-index: -1;
+      background: var(--wash);
+      pointer-events: none;
+    }
+
+    .appx {
+      display: grid;
+      grid-template-columns: 220px 1fr 330px;
+      min-height: 560px;
+      background: var(--base);
+      border: 1px solid var(--line);
+      border-bottom: 0;
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
+      font-size: 13.5px;
+    }
+
+    .sb {
+      background: var(--raised);
+      border-right: 1px solid var(--line);
+      padding: 14px 10px;
+    }
+
+    .ws {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px 14px;
+      font-weight: 600;
+    }
+
+    .ws i {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: var(--accent);
+      display: grid;
+      place-items: center;
+      font: 700 11px/1 var(--font);
+      font-style: normal;
+      color: #fff;
+    }
+
+    .ws .ic {
+      margin-left: auto;
+      color: var(--muted);
+    }
+
+    .sb a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 8px;
+      border-radius: 7px;
+      text-decoration: none;
+    }
+
+    .sb a.cur {
+      background: var(--over);
+    }
+
+    .sb .grp {
+      margin: 18px 8px 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .badge {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--accent);
+      color: #fff;
+      border-radius: var(--r-pill);
+      padding: 1px 7px;
+    }
+
+    .sb .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid var(--muted);
+      margin: 0 4px;
+    }
+
+    .mn {
+      min-width: 0;
+    }
+
+    .mn-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mn-top .id,
+    .mn-top .pg {
+      color: var(--muted);
+    }
+
+    .mn-top .pg {
+      margin-left: auto;
+      font-size: 12.5px;
+    }
+
+    .mn-body {
+      padding: 26px 32px;
+    }
+
+    .mn-body h3 {
+      font-size: 22px;
+      letter-spacing: -.02em;
+    }
+
+    .desc {
+      margin: 8px 0 16px;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 56ch;
+    }
+
+    .props {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .prop {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      font-size: 12.5px;
+    }
+
+    .prop.ok {
+      color: var(--ok);
+      border-color: hsl(140 30% 30% / .6);
+    }
+
+    .mn-body h4 {
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .act {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .act li {
+      position: relative;
+      display: flex;
+      gap: 12px;
+      padding: 7px 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .act li::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 24px;
+      bottom: -8px;
+      width: 1.5px;
+      background: var(--line);
+    }
+
+    .act li:last-child::before {
+      display: none;
+    }
+
+    .act .ic {
+      margin-top: 2px;
+    }
+
+    .act .done .ic {
+      color: var(--ok);
+    }
+
+    .act .ai .ic {
+      color: var(--accent-text);
+    }
+
+    .cmt {
+      margin: 10px 0 4px 28px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--raised);
+    }
+
+    .cmt small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+
+    .as {
+      border-left: 1px solid var(--line);
+      background: var(--raised);
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      min-width: 0;
+    }
+
+    .as-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 4px 12px;
+      font-weight: 600;
+    }
+
+    .as-top .tag {
+      margin-left: auto;
+      font-weight: 400;
+    }
+
+    .msg-u {
+      align-self: flex-end;
+      max-width: 90%;
+      background: var(--hover);
+      border-radius: var(--r-md);
+      padding: 10px 12px;
+      line-height: 1.45;
+    }
+
+    .msg-a {
+      margin-top: 14px;
+      line-height: 1.55;
+      padding: 0 4px;
+    }
+
+    .msg-a small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .ref {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--base);
+      font-size: 12.5px;
+    }
+
+    .ref span {
+      color: var(--muted);
+    }
+
+    .extra .msg-u {
+      margin-top: 16px;
+      margin-left: auto;
+      width: fit-content;
+    }
+
+    .ask {
+      margin-top: auto;
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sugg {
+      align-self: flex-start;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--accent-text);
+      font: 600 12.5px/1 var(--font);
+      cursor: pointer;
+    }
+
+    .sugg[disabled] {
+      color: var(--muted);
+      cursor: default;
+    }
+
+    .inp {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--muted);
+      background: var(--base);
+    }
+
+    /* HERO SCENE (revisi 2026-10-12, acuan pemilik: attio.com): frame dikunci saat scroll, tiga jendela pendukung masuk.
+   Keadaan akhir adalah default CSS (tanpa JS / reduced motion = semua terlihat); JS hanya menyembunyikan lalu menganimasikan. */
+    .scene {
+      position: relative;
+      margin-top: clamp(40px, 6vw, 72px);
+    }
+
+    .scene .frame {
+      margin-top: 0;
+      transform-origin: 50% 0;
+      -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 200px), transparent);
+      mask-image: linear-gradient(to bottom, #000 calc(100% - 200px), transparent);
+    }
+
+    .sat {
+      position: absolute;
+      z-index: 3;
+      background: var(--raised);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      font-size: 12.5px;
+      line-height: 1.45;
+      box-shadow: var(--inner), 0 24px 48px -20px hsl(3 50% 3% / .9);
+      overflow: hidden;
+    }
+
+    .sat-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .sat-bar .tag {
+      margin-left: auto;
+      font-weight: 400;
+    }
+
+    .sat-body {
+      padding: 12px;
+    }
+
+    .sat-chat {
+      left: -34px;
+      top: 64px;
+      width: 300px;
+    }
+
+    .sat-rule {
+      left: -26px;
+      top: 330px;
+      width: 350px;
+      background: #120E0C;
+    }
+
+    .sat-phone {
+      right: -34px;
+      top: 260px;
+      width: 240px;
+      border-radius: 22px;
+    }
+
+    @media (min-width: 900px) and (max-width: 1099.98px) {
+
+      .sat-chat,
+      .sat-rule {
+        left: -8px;
+      }
+
+      .sat-phone {
+        right: -8px;
+      }
+    }
+
+    .cm {
+      display: flex;
+      gap: 10px;
+    }
+
+    .cm+.cm {
+      margin-top: 10px;
+    }
+
+    .cm i {
+      flex: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font: 700 11px/1 var(--font);
+      font-style: normal;
+      background: var(--over);
+      color: var(--muted);
+    }
+
+    .cm i.sys {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .cm small {
+      display: block;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .code {
+      margin: 0;
+      padding: 12px 14px;
+      font: 12.5px/1.75 ui-monospace, "SFMono-Regular", Menlo, monospace;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .code .k {
+      color: var(--accent-text);
+    }
+
+    .code .c {
+      color: var(--muted);
+    }
+
+    .ph-top {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 16px 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .ph-card {
+      margin: 4px 10px 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--over);
+    }
+
+    .ph-card small {
+      display: block;
+      color: var(--accent-text);
+      font-weight: 600;
+      font-size: 11.5px;
+      margin-bottom: 4px;
+    }
+
+    .ph-card b {
+      display: block;
+      font-size: 14px;
+    }
+
+    .ph-card span {
+      color: var(--muted);
+    }
+
+    .ph-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .ph-btns span {
+      text-align: center;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      color: var(--text) !important;
+      font-weight: 600;
+    }
+
+    .ph-btns span+span {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff !important;
+    }
+
+    /* Frosted layer on the hero pop-ups (owner request 2026-10-12, overrides the earlier "no glass" line).
+   Light blur only, desktop only (where they overlap the frame); solid fallback when unsupported or reduced transparency.
+   Worst-case contrast measured over blurred light text: text 12.1:1, muted 5.31:1, accent text 5.79:1. */
+    @media (min-width: 900px) {
+      @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        .sat {
+          background: hsl(18 18% 10% / .74);
+          -webkit-backdrop-filter: blur(10px) saturate(120%);
+          backdrop-filter: blur(10px) saturate(120%);
+          border-color: hsl(20 20% 80% / .12);
+          box-shadow: inset 0 1px 0 hsl(0 0% 100% / .07), 0 24px 48px -20px hsl(3 50% 3% / .85);
+        }
+
+        .sat-rule {
+          background: hsl(18 20% 6% / .8);
+        }
+
+        .sat-bar {
+          border-bottom-color: hsl(20 20% 80% / .1);
+        }
+
+        .ph-card {
+          background: hsl(20 18% 20% / .55);
+        }
+
+        .cm i {
+          background: hsl(20 18% 22% / .7);
+        }
+      }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .sat {
+        background: var(--raised) !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+      }
+
+      .sat-rule {
+        background: #120E0C !important;
+      }
+
+      .ph-card {
+        background: var(--over) !important;
+      }
+    }
+
+    @media (max-width: 899.98px) {
+      .sats {
+        display: grid;
+        gap: 12px;
+        margin-top: -60px;
+        position: relative;
+        z-index: 3;
+      }
+
+      .sat {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        width: auto;
+      }
+    }
+
+    /* SECTIONS */
+    .sec {
+      padding-top: var(--section);
+    }
+
+    .sec-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: clamp(28px, 4vw, 48px);
+    }
+
+    .sec-head h2 {
+      font-size: var(--fs-h2);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+      max-width: 22ch;
+    }
+
+    .sec-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 40ch;
+    }
+
+    .sec-head .more {
+      color: var(--accent-text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 12px 0;
+    }
+
+    /* WORK — panel + jendela sistem (pemilik, 2026-10-12): komposisi arah 4 (acuan linear.app), tapi kanan menampilkan
+   sistem yang dihasilkan, bukan papan tugas. Tab → jendela berganti. Kasir bisa dicoba; Runut "dari rencana"; keuangan = contoh. */
+    .st {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--fs-small);
+      color: var(--muted);
+    }
+
+    .st i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .st.progress i {
+      background: var(--accent);
+    }
+
+    .st.planning i {
+      border: 1.5px dashed var(--accent-text);
+    }
+
+    .st.example i {
+      border: 1.5px solid var(--muted);
+    }
+
+    .lesson {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid hsl(20 20% 80% / .12);
+      font-weight: 600;
+    }
+
+    .lesson small {
+      display: block;
+      color: var(--muted);
+      font-size: var(--fs-small);
+      font-weight: 400;
+    }
+
+    .work-sec {
+      overflow-x: clip;
+    }
+
+    .v4 {
+      position: relative;
+      height: 600px;
+    }
+
+    .syswin {
+      position: absolute;
+      left: 368px;
+      right: -60px;
+      top: 40px;
+      bottom: 0;
+      /* starts under the panel's edge: overlap covers padding only */
+      -webkit-mask-image: linear-gradient(to right, #000 88%, transparent 100%), linear-gradient(to bottom, #000 72%, transparent);
+      mask-image: linear-gradient(to right, #000 88%, transparent 100%), linear-gradient(to bottom, #000 72%, transparent);
+      -webkit-mask-composite: source-in;
+      mask-composite: intersect;
+    }
+
+    .win {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      max-width: 780px;
+      background: var(--raised);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--inner);
+      font-size: 13px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity var(--d-ui) var(--ease), transform var(--d-ui) var(--ease), visibility 0s linear var(--d-ui);
+    }
+
+    .v4[data-sel="pos"] .win[data-p="pos"],
+    .v4[data-sel="run"] .win[data-p="run"],
+    .v4[data-sel="fin"] .win[data-p="fin"] {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition-delay: 0s;
+    }
+
+    .wbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 104px 12px 48px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .wbar span {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .wbar .tag {
+      margin-left: auto;
+      font-weight: 400;
+    }
+
+    .wbody {
+      padding: 18px 104px 18px 48px;
+      background: var(--base);
+    }
+
+    /* right padding keeps content out of the fade */
+    .chip {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .chip.ok {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .chip.wait {
+      background: var(--wait-bg);
+      color: var(--wait);
+    }
+
+    /* kasir */
+    .pos {
+      display: grid;
+      grid-template-columns: 1fr 230px;
+      gap: 14px;
+    }
+
+    .items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .item {
+      text-align: left;
+      min-height: 76px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--raised);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+      transition: border-color var(--d-press) var(--ease), background-color var(--d-press) var(--ease);
+    }
+
+    .item:hover {
+      border-color: var(--control);
+      background: var(--over);
+    }
+
+    .item:active {
+      transform: translateY(1px);
+    }
+
+    .item b {
+      display: block;
+      font-weight: 600;
+    }
+
+    .item small {
+      color: var(--muted);
+    }
+
+    .cart {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--raised);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 250px;
+    }
+
+    .cart h4 {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .cline {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .cline span:first-child {
+      color: var(--muted);
+    }
+
+    .ctot {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .cpay {
+      margin-top: 8px;
+      min-height: 44px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font: 600 14px/1 var(--font);
+      cursor: pointer;
+    }
+
+    .cpay:hover {
+      background: var(--accent-hover);
+    }
+
+    .cflow {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .cflow b {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* runut */
+    .rn-h {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+
+    .rn-h span {
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .stages {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 18px;
+      font-size: 12px;
+    }
+
+    .stages div {
+      border-top: 3px solid var(--line);
+      padding-top: 7px;
+      color: var(--muted);
+    }
+
+    .stages .done {
+      border-color: var(--text);
+      color: var(--text);
+    }
+
+    .stages .now {
+      border-color: var(--accent-text);
+      color: var(--accent-text);
+      font-weight: 600;
+    }
+
+    .rn {
+      display: grid;
+      grid-template-columns: 1fr 230px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .rn table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .rn td {
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .rn td+td {
+      text-align: right;
+    }
+
+    .form {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--raised);
+      padding: 14px;
+      font-size: 12.5px;
+    }
+
+    .form h4 {
+      font-size: 14px;
+    }
+
+    .form .sub {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 2px 0 12px;
+    }
+
+    .fld {
+      margin-bottom: 10px;
+    }
+
+    .fld small {
+      display: block;
+      color: var(--muted);
+      font-size: 11.5px;
+      margin-bottom: 4px;
+    }
+
+    .fld div {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: var(--base);
+    }
+
+    .ck {
+      display: flex;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 12px 0;
+    }
+
+    .ck i {
+      flex: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 4px;
+      background: var(--accent);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-style: normal;
+    }
+
+    .form .go {
+      background: var(--accent);
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 9px;
+      font-weight: 600;
+    }
+
+    /* keuangan */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      background: var(--raised);
+    }
+
+    .kpi small {
+      display: block;
+      color: var(--muted);
+    }
+
+    .kpi b {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .fin {
+      display: grid;
+      grid-template-columns: 1fr 230px;
+      gap: 14px;
+    }
+
+    .chartbox {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--raised);
+      padding: 14px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 14px;
+      height: 2px;
+      margin-right: 6px;
+      vertical-align: middle;
+      background: var(--accent-text);
+    }
+
+    .legend i.out {
+      background: none;
+      border-top: 2px dashed var(--control);
+    }
+
+    .chart {
+      width: 100%;
+      height: 170px;
+      display: block;
+    }
+
+    .inv {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--raised);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .inv h4 {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .irow {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2px 10px;
+    }
+
+    .irow small {
+      color: var(--muted);
+    }
+
+    .irow .chip {
+      grid-column: 1 / -1;
+      justify-self: start;
+      margin-top: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .win {
+        transition: none;
+        transform: none;
+      }
+    }
+
+    .thread {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 400px;
+      z-index: 3;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--line);
+      background: var(--raised);
+      box-shadow: inset 0 1px 0 hsl(0 0% 100% / .07), 0 40px 80px -30px #000;
+    }
+
+    @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .thread {
+        background: hsl(18 18% 10% / .74);
+        -webkit-backdrop-filter: blur(10px) saturate(120%);
+        backdrop-filter: blur(10px) saturate(120%);
+        border-color: hsl(20 20% 80% / .12);
+      }
+    }
+
+    .th-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 20px;
+      border-bottom: 1px solid hsl(20 20% 80% / .1);
+      font-weight: 600;
+    }
+
+    .th-top span {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .th-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 12px 16px 0;
+      flex-wrap: wrap;
+    }
+
+    .th-tabs button {
+      position: relative;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font: 500 12.5px/1 var(--font);
+      cursor: pointer;
+      transition: background-color var(--d-press) var(--ease), color var(--d-press) var(--ease);
+    }
+
+    .th-tabs button::after {
+      content: "";
+      position: absolute;
+      inset: -8px -2px;
+    }
+
+    /* ≥44px hit area */
+    .th-tabs button:hover {
+      color: var(--text);
+    }
+
+    .th-tabs button[aria-selected="true"] {
+      background: var(--hover);
+      color: var(--text);
+      border-color: transparent;
+    }
+
+    .th-body {
+      padding: 18px 20px 22px;
+    }
+
+    .th-body h3 {
+      margin-top: 10px;
+      font-size: 22px;
+      letter-spacing: -.02em;
+    }
+
+    .th-body p {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .thread {
+        background: var(--raised) !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+      }
+    }
+
+    /* WHAT WE BUILD — bento (2026-10-12): kartu beda ukuran, tiap layanan membawa potongan UI kecil berlabel ilustrasi. */
+    .svc {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .svc>li {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--raised);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      box-shadow: var(--inner);
+      overflow: hidden;
+      transition: background-color var(--d-hover) var(--ease);
+    }
+
+    .svc>li:hover {
+      background: #211A17;
+    }
+
+    .svc>li.w3 {
+      grid-column: span 3;
+    }
+
+    .svc>li.w2 {
+      grid-column: span 2;
+    }
+
+    .svc>li.w6 {
+      grid-column: span 6;
+      flex-direction: row;
+    }
+
+    .svc .vig {
+      position: relative;
+      flex: 1;
+      min-height: 190px;
+      margin: 8px 8px 0;
+      border-radius: 10px;
+      background: var(--base);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      padding: 44px 16px 16px;
+      font-size: 12.5px;
+      padding-bottom: 22px;
+      -webkit-mask-image: linear-gradient(to bottom, #000 88%, transparent);
+      mask-image: linear-gradient(to bottom, #000 88%, transparent);
+    }
+
+    .svc .vig::before {
+      content: "";
+      position: absolute;
+      inset: 30% -20% -50%;
+      background: var(--wash);
+      opacity: .7;
+      pointer-events: none;
+    }
+
+    .svc .vig>* {
+      position: relative;
+    }
+
+    .svc .w6 .vig {
+      flex: 1.4;
+      margin: 8px 8px 8px 0;
+      order: 2;
+      -webkit-mask-image: none;
+      mask-image: none;
+      min-height: 220px;
+    }
+
+    .svc .txt {
+      padding: 18px 22px 22px;
+    }
+
+    .svc .w6 .txt {
+      flex: 1;
+      align-self: center;
+      padding: 28px;
+    }
+
+    .svc .txt .ic {
+      width: 18px;
+      height: 18px;
+      color: var(--accent-text);
+    }
+
+    .svc h3 {
+      margin: 10px 0 6px;
+      font-size: 17px;
+      letter-spacing: -.01em;
+    }
+
+    .svc .txt p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 46ch;
+    }
+
+    .vtag {
+      position: absolute !important;
+      right: 12px;
+      top: 12px;
+      z-index: 2;
+    }
+
+    .vrow {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .vrow span:first-child {
+      color: var(--muted);
+    }
+
+    .vchips {
+      display: flex;
+      gap: 24px 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    /* small controls inside the illustrations: compact visually, 44px hit area via ::after */
+    .vbtn {
+      position: relative;
+      padding: 4px 11px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font: 500 12px/1.2 var(--font);
+      cursor: pointer;
+      transition: background-color var(--d-press) var(--ease), color var(--d-press) var(--ease), border-color var(--d-press) var(--ease);
+    }
+
+    .vbtn::after {
+      content: "";
+      position: absolute;
+      inset: -11px -3px;
+    }
+
+    .vbtn:hover {
+      color: var(--text);
+      border-color: var(--control);
+    }
+
+    .vbtn[aria-pressed="true"] {
+      background: var(--hover);
+      color: var(--text);
+      border-color: transparent;
+    }
+
+    .vrow {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .vrow span:first-child {
+      color: var(--muted);
+    }
+
+    .vkpi small {
+      display: block;
+      color: var(--muted);
+    }
+
+    .vkpi b {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -.02em;
+    }
+
+    .vkpi .chip {
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .vhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 14px 10px;
+    }
+
+    .vhead .vchips {
+      flex-wrap: nowrap;
+    }
+
+    .svc .vig>.vhead {
+      z-index: 1;
+    }
+
+    .vspark {
+      display: block;
+      width: 100%;
+      height: 70px;
+      margin-top: 10px;
+    }
+
+    .vflow {
+      display: grid;
+      gap: 8px;
+    }
+
+    .vstep {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      background: var(--raised);
+      border: 1px solid var(--line);
+    }
+
+    .vstep i {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-style: normal;
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .vstep.now i {
+      background: var(--wait-bg);
+      color: var(--wait);
+    }
+
+    .vstep.now {
+      border-color: hsl(38 60% 50% / .35);
+    }
+
+    .vstep b {
+      font-weight: 500;
+    }
+
+    .vstep span {
+      color: var(--muted);
+      margin-left: auto;
+      font-size: 11.5px;
+    }
+
+    .vstep.new {
+      animation: vin var(--d-ui) var(--ease);
+    }
+
+    @keyframes vin {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+    }
+
+    .vact {
+      margin-top: 12px;
+    }
+
+    .vfield {
+      margin-bottom: 8px;
+    }
+
+    .vfield small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .vfield div {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 10px;
+      background: var(--raised);
+    }
+
+    .vslots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .vslots .vbtn {
+      border-radius: 8px;
+      padding: 7px 0;
+      text-align: center;
+    }
+
+    .vslots .vbtn::after {
+      inset: -8px -2px;
+    }
+
+    .vslots .vbtn[aria-pressed="true"] {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .vgo {
+      position: relative;
+      width: 100%;
+      min-height: 36px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font: 600 13px/1 var(--font);
+      cursor: pointer;
+    }
+
+    .vgo::after {
+      content: "";
+      position: absolute;
+      inset: -5px 0;
+    }
+
+    .vgo:hover {
+      background: var(--accent-hover);
+    }
+
+    .vgo.done {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .vgo.ghost {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .vok {
+      margin-top: 8px;
+      color: var(--ok);
+      font-size: 12px;
+      min-height: 18px;
+    }
+
+    .vq {
+      margin-left: auto;
+      width: fit-content;
+      max-width: 88%;
+      background: var(--hover);
+      border-radius: 12px;
+      padding: 8px 11px;
+    }
+
+    .va {
+      margin-top: 10px;
+      line-height: 1.5;
+      min-height: 66px;
+    }
+
+    .va small {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .va small svg {
+      width: 13px;
+      height: 13px;
+      fill: var(--accent-text);
+    }
+
+    .vthink {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 21px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .vthink[hidden] {
+      display: none;
+    }
+
+    .vthink i {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-text);
+      animation: vdot 1s var(--ease) infinite;
+    }
+
+    .vthink i:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .vthink i:nth-child(3) {
+      animation-delay: .3s;
+    }
+
+    .vthink span {
+      margin-left: 6px;
+      background: linear-gradient(90deg, var(--muted) 30%, var(--text) 50%, var(--muted) 70%) 0 0 / 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: vshine 1.2s linear infinite;
+    }
+
+    @keyframes vdot {
+
+      0%,
+      100% {
+        opacity: .25;
+        transform: translateY(0);
+      }
+
+      40% {
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+    }
+
+    @keyframes vshine {
+      to {
+        background-position: -200% 0;
+      }
+    }
+
+    .vcaret {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      margin-left: 2px;
+      vertical-align: -2px;
+      background: var(--accent-text);
+      animation: vblink .8s steps(2) infinite;
+    }
+
+    @keyframes vblink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .vq.pop {
+      animation: vin var(--d-ui) var(--ease);
+    }
+
+    .vqs {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .vqs .vbtn {
+      min-height: 36px;
+      text-align: left;
+    }
+
+    .vqs .vbtn::after {
+      inset: -5px -3px;
+    }
+
+    /* before/after compare */
+    .vcmp {
+      position: relative;
+      height: 250px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      --x: 50%;
+    }
+
+    .vlayer {
+      position: absolute;
+      inset: 0;
+      padding: 14px;
+      background: var(--raised);
+    }
+
+    .vlayer.after {
+      background: #211A17;
+      clip-path: inset(0 0 0 var(--x));
+    }
+
+    .vlayer h4 {
+      font-size: 11.5px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .02em;
+      margin-bottom: 10px;
+    }
+
+    .vlayer.after h4 {
+      text-align: right;
+    }
+
+    .vbad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+    }
+
+    .vbad span {
+      height: 26px;
+      border-radius: 5px;
+      background: var(--over);
+    }
+
+    .vbad span:nth-child(3n) {
+      background: #2F2622;
+    }
+
+    .vgood {
+      display: grid;
+      gap: 8px;
+      width: 44%;
+      margin-left: auto;
+    }
+
+    .vgood .vstep {
+      padding: 8px 10px;
+    }
+
+    .vgood .go {
+      background: var(--accent);
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 8px;
+      font-weight: 600;
+    }
+
+    .vnote {
+      position: absolute;
+      bottom: 14px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      color: var(--muted);
+      font-size: 11.5px;
+      max-width: 46%;
+    }
+
+    .before .vnote {
+      left: 14px;
+    }
+
+    .after .vnote {
+      right: 14px;
+    }
+
+    .vnote i {
+      flex: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 700;
+      font-style: normal;
+      background: var(--accent-text);
+      color: var(--base);
+    }
+
+    .vhandle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: var(--x);
+      width: 2px;
+      margin-left: -1px;
+      background: var(--accent-text);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .vhandle::after {
+      content: "⟷";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      margin: -15px 0 0 -15px;
+      border-radius: 50%;
+      background: var(--accent-text);
+      color: var(--base);
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .vcmp input {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: ew-resize;
+    }
+
+    .vcmp:has(input:focus-visible) {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .vhint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    /* HOW WE WORK (revisi 2026-10-12, pemilik): tiga kartu, masing-masing objek isometrik perumpamaan (bukan adegan harfiah).
+   Tanpa animasi scroll; objek bergerak saat kartu di-hover (700 ms). HP/reduced motion: diam. SVG dari src/iso_how.py. */
+    .how {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hcard {
+      background: var(--raised);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      box-shadow: var(--inner);
+      overflow: hidden;
+      transition: background-color var(--d-hover) var(--ease);
+    }
+
+    .hcard:hover {
+      background: #211A17;
+    }
+
+    .hart {
+      position: relative;
+      margin: 8px 8px 0;
+      border-radius: 10px;
+      background: var(--base);
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .hart::before {
+      content: "";
+      position: absolute;
+      inset: 20% 10% -30%;
+      background: var(--wash);
+      opacity: .7;
+      pointer-events: none;
+    }
+
+    .hiso {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .hcard .txt {
+      padding: 20px 24px 26px;
+    }
+
+    .hcard .n {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      transition: background-color var(--d-hover) var(--ease), color var(--d-hover) var(--ease), border-color var(--d-hover) var(--ease);
+    }
+
+    .hcard:hover .n {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .hcard h3 {
+      margin-top: 14px;
+      font-size: var(--fs-h3);
+      letter-spacing: -.015em;
+    }
+
+    .hcard p {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    /* motion (hover only) */
+    .hiso g {
+      transition: transform var(--d-hover) var(--ease);
+    }
+
+    .hiso-1 .t {
+      transform: translate(var(--dx), var(--dy));
+      transition-delay: calc(var(--k) * 25ms);
+    }
+
+    .hcard:hover .hiso-1 .t {
+      transform: none;
+    }
+
+    .hiso-2 .pl {
+      transform: translateY(calc(var(--i) * -9px));
+    }
+
+    .hcard:hover .hiso-2 .pl {
+      transform: translateY(calc(var(--i) * -26px));
+    }
+
+    .hiso-3 .cube {
+      transform: none;
+    }
+
+    .hcard:hover .hiso-3 .cube {
+      transform: translateY(-8px);
+    }
+
+    .hiso-3 .orbit-spin {
+      transform-box: view-box;
+      transform-origin: 0 0;
+    }
+
+    .hcard:hover .hiso-3 .orbit-spin {
+      animation: orbit 2.4s linear infinite;
+    }
+
+    .hiso-3 .ring {
+      transition: stroke var(--d-hover) var(--ease);
+    }
+
+    .hcard:hover .hiso-3 .ring {
+      stroke: #6E4A40;
+    }
+
+    @keyframes orbit {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (hover: none),
+    (prefers-reduced-motion: reduce) {
+
+      .hiso-1 .t,
+      .hcard:hover .hiso-1 .t {
+        transform: none;
+      }
+
+      .hcard:hover .hiso-2 .pl {
+        transform: translateY(calc(var(--i) * -9px));
+      }
+
+      .hcard:hover .hiso-3 .cube {
+        transform: none;
+      }
+
+      .hcard:hover .hiso-3 .orbit-spin {
+        animation: none;
+      }
+    }
+
+    /* WHO (2026-10-12): 4 kartu, objek isometrik perumpamaan kecil (bahasa sama dengan How we work) + baris "biasanya kami bangun". Hover: bagian objek naik bergantian. */
+    .who {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .wcard {
+      display: flex;
+      flex-direction: column;
+      background: var(--raised);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      box-shadow: var(--inner);
+      overflow: hidden;
+      transition: background-color var(--d-hover) var(--ease);
+    }
+
+    .wcard:hover {
+      background: #211A17;
+    }
+
+    .wart {
+      position: relative;
+      margin: 8px 8px 0;
+      border-radius: 10px;
+      background: var(--base);
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .wart::before {
+      content: "";
+      position: absolute;
+      inset: 30% 5% -40%;
+      background: var(--wash);
+      opacity: .6;
+      pointer-events: none;
+    }
+
+    .wiso {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .wiso .lift {
+      transition: transform var(--d-hover) var(--ease);
+      transition-delay: calc(var(--k) * 60ms);
+    }
+
+    .wcard:hover .wiso .lift {
+      transform: translateY(-6px);
+    }
+
+    .wcard .txt {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 18px 20px 20px;
+    }
+
+    .wcard h3 {
+      font-size: 17px;
+      letter-spacing: -.01em;
+    }
+
+    .wcard p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .wcard .typ {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 13.5px;
+      color: var(--text);
+    }
+
+    .wcard p {
+      margin-bottom: 16px;
+    }
+
+    .wcard .typ small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    @media (hover: none),
+    (prefers-reduced-motion: reduce) {
+      .wcard:hover .wiso .lift {
+        transform: none;
+      }
+    }
+
+    /* FAQ (2026-10-12): tenang, tanpa ilustrasi. Satu jawaban terbuka (details name), buka/tutup mulus (interpolate-size; browser lama = instan). */
+    :root {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq-wrap {
+      display: grid;
+      grid-template-columns: 4fr 8fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .faq-wrap h2 {
+      font-size: var(--fs-h2);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+
+    .faq {
+      border-top: 1px solid var(--line);
+    }
+
+    .faq details {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .faq summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      min-height: 64px;
+      padding: 14px 0;
+      font-weight: 600;
+      font-size: 17px;
+      color: #D9D2CC;
+      transition: color var(--d-press) var(--ease);
+    }
+
+    .faq summary:hover,
+    .faq details[open] summary {
+      color: var(--text);
+    }
+
+    .faq summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq summary .ic {
+      flex: none;
+      color: var(--muted);
+      transition: transform var(--d-ui) var(--ease), color var(--d-ui) var(--ease);
+    }
+
+    .faq details[open] summary .ic {
+      transform: rotate(45deg);
+      color: var(--accent-text);
+    }
+
+    .faq details::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition: block-size var(--d-ui) var(--ease), content-visibility var(--d-ui) allow-discrete;
+    }
+
+    .faq details[open]::details-content {
+      block-size: auto;
+    }
+
+    .faq details p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .faq details::details-content {
+        transition: none;
+      }
+    }
+
+    /* START A PROJECT */
+    /* double bezel (pemilik 2026-10-12): outer frame 8px + inner card; inner radius = outer radius - gap */
+    .start {
+      margin-top: var(--section);
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: hsl(20 20% 80% / .02);
+    }
+
+    .start-in {
+      background: var(--raised);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--inner);
+      padding: clamp(28px, 5vw, 56px);
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: clamp(24px, 4vw, 56px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .start-in::before {
+      content: "";
+      position: absolute;
+      inset: -30% 40% 40% -20%;
+      background: var(--wash);
+      pointer-events: none;
+    }
+
+    .start h2 {
+      position: relative;
+      font-size: var(--fs-h2);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+
+    .start .lead {
+      position: relative;
+      color: var(--muted);
+      font-size: var(--fs-lead);
+      margin: 14px 0 0;
+      max-width: 34ch;
+    }
+
+    .start .mail {
+      position: relative;
+      margin-top: 14px;
+      font-size: 15px;
+    }
+
+    .start .mail a {
+      color: var(--accent-text);
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    form {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .f {
+      display: grid;
+      gap: 6px;
+    }
+
+    .f.full {
+      grid-column: 1 / -1;
+    }
+
+    .f label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .f label small {
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .f input,
+    .f textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 14px;
+      border: 1.5px solid var(--control);
+      border-radius: var(--r-md);
+      background: var(--base);
+      color: var(--text);
+      font: 400 16px/1.4 var(--font);
+    }
+
+    .f input::placeholder,
+    .f textarea::placeholder {
+      color: #8E847D;
+    }
+
+    .f textarea {
+      min-height: 128px;
+      resize: vertical;
+    }
+
+    .f-foot {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .f-foot p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .sent {
+      color: var(--ok) !important;
+    }
+
+    footer {
+      margin-top: var(--section);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      overflow: hidden;
+    }
+
+    .ft-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px 48px;
+      flex-wrap: wrap;
+      padding: 48px 0 40px;
+    }
+
+    .ft-top .ft-col {
+      min-width: 220px;
+    }
+
+    .ft-brand .wm {
+      color: var(--text);
+      font-size: 19px;
+    }
+
+    .ft-brand .logo {
+      margin-right: 0;
+    }
+
+    .ft-brand .logo svg {
+      width: 40px;
+    }
+
+    .ft-brand p {
+      margin: 10px 0 0;
+      max-width: 32ch;
+    }
+
+    .ft-col h3 {
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: .02em;
+    }
+
+    .ft-col a {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .ft-col>span {
+      display: flex;
+      align-items: center;
+      min-height: 32px;
+    }
+
+    .ft-col a:hover {
+      color: var(--text);
+    }
+
+    .ft-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ft-bot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 18px 0 22px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .ft-legal {
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .fnote {
+      flex: 1 1 260px;
+      max-width: 52ch;
+    }
+
+    .fnote a {
+      color: var(--accent-text);
+    }
+
+    /* inline link in a sentence: WCAG 2.5.8 inline exception */
+    .ft-bot a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .ft-bot a:hover {
+      color: var(--text);
+    }
+
+    .ft-mark {
+      display: block;
+      margin: 0 0 -0.22em;
+      font-weight: 700;
+      font-size: clamp(64px, 17vw, 236px);
+      line-height: .9;
+      letter-spacing: -.06em;
+      white-space: nowrap;
+      text-align: center;
+      color: transparent;
+      background: linear-gradient(to bottom, #2B231F, var(--base) 92%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      user-select: none;
+    }
+
+    @media (max-width: 1099.98px) {
+      .appx {
+        grid-template-columns: 200px 1fr;
+      }
+
+      .as {
+        display: none;
+      }
+
+      .svc>li.w3,
+      .svc>li.w2 {
+        grid-column: span 3;
+      }
+
+      .svc>li.w6 {
+        flex-direction: column;
+      }
+
+      .svc .w6 .vig {
+        order: 0;
+        margin: 8px 8px 0;
+        flex: none;
+      }
+
+      .svc .w6 .txt {
+        padding: 18px 22px 22px;
+      }
+    }
+
+    @media (max-width: 899.98px) {
+      .links {
+        display: none;
+      }
+
+      .nav .lang {
+        margin-left: auto;
+      }
+
+      .start-in,
+      .faq-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .v4 {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .thread {
+        position: relative;
+        width: auto;
+        order: -1;
+      }
+
+      .syswin {
+        position: relative;
+        left: 0;
+        right: auto;
+        top: 0;
+        margin-top: 16px;
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+
+      .win {
+        position: relative;
+        width: auto;
+        max-width: none;
+        display: none;
+        transform: none;
+      }
+
+      .v4[data-sel="pos"] .win[data-p="pos"],
+      .v4[data-sel="run"] .win[data-p="run"],
+      .v4[data-sel="fin"] .win[data-p="fin"] {
+        display: block;
+      }
+
+      .wbar {
+        padding: 12px 14px;
+        flex-wrap: wrap;
+      }
+
+      .wbody {
+        padding: 14px;
+      }
+
+      .pos,
+      .rn,
+      .fin {
+        grid-template-columns: 1fr;
+      }
+
+      .cart {
+        min-height: 0;
+      }
+
+      .kpis {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+
+      .kpi b {
+        font-size: 15px;
+      }
+
+      .who {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .how {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 719.98px) {
+      .items {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .frame {
+        padding: 6px 6px 0;
+        border-radius: 12px 12px 0 0;
+      }
+
+      .appx {
+        grid-template-columns: 1fr;
+        min-height: 0;
+      }
+
+      .sb {
+        display: none;
+      }
+
+      .mn-body {
+        padding: 18px 16px;
+      }
+
+      .mn-top .pg {
+        display: none;
+      }
+
+      .as {
+        display: flex;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .svc>li.w3,
+      .svc>li.w2,
+      .svc>li.w6 {
+        grid-column: 1 / -1;
+      }
+
+      .vcmp {
+        height: 290px;
+      }
+
+      .vnote {
+        max-width: 44%;
+      }
+
+      .who {
+        grid-template-columns: 1fr;
+      }
+
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      .nav .btn {
+        padding: 0 14px;
+      }
+    }
+
+    @media (max-width: 359.98px) {
+      .nav .btn {
+        display: none;
+      }
+    }
+
+    @media (max-width: 719.98px) {
+      .concept {
+        display: none;
+      }
+    }
+
+    .wm,
+    .nav .btn {
+      white-space: nowrap;
+    }
+
+    @media (max-width: 479.98px) {
+      .nav .wrap {
+        gap: 8px;
+      }
+
+      .logo {
+        margin-right: 8px;
+      }
+    }
+
+    @media (max-width: 399.98px) {
+      .nav .btn {
+        padding: 0 12px;
+        font-size: 13.5px;
+      }
+
+      .wm {
+        font-size: 17px;
+      }
+    }
+
+    .logo {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      margin-right: 10px;
+    }
+
+    /* mark only, brand terracotta, no container (owner 2026-10-13) */
+    .logo svg {
+      width: 30px;
+      height: auto;
+      fill: #9C413D;
+    }
+  </style>
+</head>
+
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <path id="kmark"
+        d="M385.1 3.2Q386.7 6.2 393.0 28.2Q399.3 50.2 400.1 51.7Q400.8 53.2 405.5 68.7Q410.2 84.2 415.7 99.7Q421.1 115.2 431.0 140.7Q440.9 166.2 447.5 181.2Q454.1 196.2 461.0 209.7Q468.0 223.2 479.1 243.2Q490.3 263.2 499.7 278.2Q509.1 293.2 520.1 309.2Q531.1 325.2 542.2 339.7Q553.3 354.2 577.3 380.7Q601.2 407.2 624.4 429.0Q647.6 450.8 650.6 452.8Q653.6 454.9 659.1 459.9Q664.6 464.9 678.6 475.9Q692.6 487.0 716.6 503.8Q740.6 520.6 754.7 529.4Q768.8 538.2 768.7 539.2Q768.6 540.2 768.1 540.5Q767.6 540.8 762.1 541.1Q756.6 541.4 750.1 540.6Q743.6 539.8 730.1 539.0Q716.6 538.3 707.6 537.2Q698.5 536.2 693.1 535.0Q687.6 533.8 684.4 533.5Q681.1 533.2 667.4 530.3Q653.6 527.4 637.7 522.3Q621.8 517.2 611.2 512.7Q600.6 508.2 587.6 501.3Q574.6 494.4 565.7 488.8Q556.8 483.2 540.4 470.7Q524.0 458.2 518.1 452.7Q512.1 447.2 497.4 432.2Q482.6 417.2 472.6 405.7Q462.6 394.2 453.1 381.9Q443.6 369.6 432.6 353.9Q421.5 338.2 416.1 329.2Q410.6 320.2 400.5 302.2Q390.4 284.2 388.2 281.7Q386.0 279.2 384.8 278.8Q383.6 278.5 382.1 279.8Q380.6 281.2 370.1 298.2Q359.7 315.2 348.7 331.9Q337.6 348.7 326.6 363.6Q315.6 378.5 303.7 393.3Q291.7 408.2 280.7 420.0Q269.6 431.7 257.6 443.5Q245.6 455.3 235.6 463.8Q225.6 472.2 218.0 477.7Q210.4 483.2 199.3 490.2Q188.1 497.2 174.4 504.2Q160.6 511.2 150.6 515.2Q140.5 519.2 121.4 524.7Q102.4 530.2 94.6 531.7Q86.8 533.2 83.2 533.5Q79.6 533.7 76.6 534.6Q73.6 535.4 62.1 536.9Q50.6 538.4 35.6 539.0Q20.6 539.7 14.1 540.5Q7.6 541.2 4.1 540.9Q0.6 540.6 0.3 539.9Q0.0 539.2 0.6 538.2Q1.2 537.2 7.9 533.0Q14.6 528.8 16.1 527.4Q17.6 526.1 20.6 524.4Q23.6 522.7 38.1 512.7Q52.6 502.6 65.6 493.1Q78.6 483.6 93.1 472.0Q107.6 460.5 124.1 446.1Q140.6 431.8 158.4 414.5Q176.1 397.2 189.1 383.2Q202.1 369.2 214.1 354.2Q226.2 339.2 232.6 330.7Q238.9 322.2 251.5 303.2Q264.2 284.2 276.6 263.2Q289.1 242.2 298.5 224.2Q308.0 206.2 317.6 185.7Q327.2 165.2 338.2 137.7Q349.1 110.2 358.7 80.2Q368.3 50.2 373.0 32.9Q377.6 15.6 378.4 13.9Q379.1 12.2 379.8 8.7Q380.5 5.2 382.0 2.7Q383.5 0.2 383.5 0.2Z" />
+    </defs>
+  </svg>
+  <span class="concept" data-t="concept">Concept · Home · draft copy</span>
+
+  <header class="nav" id="nav">
+    <div class="wrap">
+      <a class="wm" href="#top"><span class="logo" aria-hidden="true"><svg viewBox="0 0 768.8 541.4">
+            <use href="#kmark" />
+          </svg></span>kala studio</a>
+      <nav class="links" aria-label="Main"><a href="#services" data-t="n1">Services</a><a href="#work"
+          data-t="n2">Work</a><a href="#how" data-t="n3">About</a><a href="#contact" data-t="n4">Contact</a></nav>
+      <div class="lang" id="lang" role="group" aria-label="Language / Bahasa"><button type="button" data-l="en"
+          lang="en" aria-pressed="true">EN</button><button type="button" data-l="id" lang="id"
+          aria-pressed="false">ID</button></div>
+      <a class="btn" href="#contact" data-t="cta">Start a project</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="h1">
+      <h1 id="h1" data-t="h1">Software that follows your process.</h1>
+      <div class="hero-row">
+        <p data-t="sub">Not the other way around. Designed and engineered by one team.</p><a class="btn" href="#contact"
+          data-t="cta">Start a project</a>
+      </div>
+      <div class="scene" id="scene">
+        <div class="frame">
+          <div class="appx" role="group"
+            aria-label="Example of a custom purchasing system: a request, its approval history, and an assistant that answers questions about the data. Not a client project.">
+            <aside class="sb">
+              <div class="ws"><i>E</i><span data-t="ws">Example Co.</span><svg class="ic" viewBox="0 0 16 16"
+                  aria-hidden="true">
+                  <circle cx="7" cy="7" r="4" />
+                  <path d="M10 10l3 3" />
+                </svg></div>
+              <a href="#" tabindex="-1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M2 9.5h3.2l1 1.5h3.6l1-1.5H14" />
+                  <path d="M3.6 3h8.8L14 9.5V13H2V9.5z" />
+                </svg><span data-t="m1">Inbox</span></a>
+              <a href="#" tabindex="-1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="8" cy="5.5" r="2.5" />
+                  <path d="M3 13.5c.8-2.3 2.7-3.5 5-3.5s4.2 1.2 5 3.5" />
+                </svg><span data-t="m2">My requests</span></a>
+              <a href="#" class="cur" tabindex="-1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" />
+                  <path d="M5.5 8.2l1.7 1.7 3.3-3.4" />
+                </svg><span data-t="m3">Approvals</span><b class="badge">1</b></a>
+              <a href="#" tabindex="-1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M3 13V8M8 13V4M13 13V9.5" />
+                </svg><span data-t="m4">Reports</span></a>
+              <div class="grp" data-t="g1">Branches</div>
+              <a href="#" tabindex="-1"><i class="dot"></i>Trenggalek</a>
+              <a href="#" tabindex="-1"><i class="dot"></i>Tulungagung</a>
+              <a href="#" tabindex="-1"><i class="dot"></i>Blitar</a>
+              <div class="grp" data-t="g2">Workflows</div>
+              <a href="#" tabindex="-1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="4" cy="4" r="1.6" />
+                  <circle cx="12" cy="12" r="1.6" />
+                  <path d="M4 5.6V9a3 3 0 003 3h3.4" />
+                </svg><span data-t="w1">Purchase approval</span></a>
+              <a href="#" tabindex="-1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="4" cy="4" r="1.6" />
+                  <circle cx="12" cy="12" r="1.6" />
+                  <path d="M4 5.6V9a3 3 0 003 3h3.4" />
+                </svg><span data-t="w2">Daily summary</span></a>
+            </aside>
+            <div class="mn">
+              <div class="mn-top"><span class="id">PR-1041</span><b data-t="r2">Router replacement</b><span class="pg">1
+                  / 4 &nbsp;↑ ↓</span></div>
+              <div class="mn-body">
+                <h3 data-t="r2">Router replacement</h3>
+                <p class="desc" data-t="desc">The office router drops the connection twice a day. Replace it with the
+                  same model as the main office.</p>
+                <div class="props"><span class="prop">Tulungagung</span><span class="prop num">Rp1.250.000</span><span
+                    class="prop ok" data-t="ok">Approved</span></div>
+                <h4 data-t="act">Activity</h4>
+                <ul class="act">
+                  <li class="done"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                      <rect x="3" y="2.5" width="10" height="11" rx="1.5" />
+                      <path d="M5.5 6h5M5.5 8.5h5M5.5 11h3" />
+                    </svg><span data-t="a1">Staff submitted the request through the form · 09:12</span></li>
+                  <li class="done"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                      <circle cx="8" cy="8" r="6" />
+                      <path d="M5.5 8.2l1.7 1.7 3.3-3.4" />
+                    </svg><span data-t="a2">Branch manager approved · 10:40</span></li>
+                </ul>
+                <div class="cmt"><small data-t="cm1">Branch manager · 10:40</small><span data-t="cm2">Approved. Same
+                    model as the main office, please.</span></div>
+                <ul class="act" style="margin-top:8px">
+                  <li class="done"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M2 3h2l1.4 7h7L14 5H4.6" />
+                      <circle cx="6" cy="13" r=".9" />
+                      <circle cx="12" cy="13" r=".9" />
+                    </svg><span data-t="a3">Purchasing placed the order · 13:05</span></li>
+                  <li class="ai"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M3 3.5h10v7H7l-3 2.5v-2.5H3z" />
+                    </svg><span data-t="a4">Included in today’s summary to the team chat · 17:00</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="as" aria-live="polite">
+              <div class="as-top"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M8 2.5l1.3 3.2 3.2 1.3-3.2 1.3L8 11.5 6.7 8.3 3.5 7l3.2-1.3z" />
+                </svg><span data-t="as">Assistant</span><em class="tag" data-t="ex">Example · not a client project</em>
+              </div>
+              <div class="msg-u" data-t="q1">What’s still waiting for approval?</div>
+              <div class="msg-a"><small data-t="from">From your purchase requests</small><span data-t="ans1">One
+                  request: printer paper, 10 reams, for Trenggalek. Rp450.000, submitted today at 09:12.</span>
+                <div class="ref"><b>PR-1042</b> <span data-t="ref">· Waiting for the branch manager</span></div>
+              </div>
+              <div class="extra"></div>
+              <div class="ask"><button type="button" class="sugg" data-t="q2">How much did we spend this week?</button>
+                <div class="inp" data-t="inp">Ask about your data…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sats" aria-label="How the example request moves through the system">
+          <div class="sat sat-chat" role="group" aria-label="Example team chat">
+            <div class="sat-bar"><span data-t="sc.t">Team chat · Trenggalek</span><em class="tag"
+                data-t="exs">Example</em></div>
+            <div class="sat-body">
+              <div class="cm"><i>S</i>
+                <div><small data-t="sc.m1a">Staff · 09:10</small><span data-t="sc.m1">Printer paper is almost out. We
+                    need 10 reams.</span></div>
+              </div>
+              <div class="cm"><i class="sys">K</i>
+                <div><small data-t="sc.m2a">System · 09:12</small><span data-t="sc.m2">Request PR-1042 created. Waiting
+                    for the branch manager.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="sat sat-rule" role="group"
+            aria-label="Example of the approval rule, written the way the team works">
+            <div class="sat-bar"><span data-t="sr.t">approval-rule</span><em class="tag" data-t="exs">Example</em></div>
+            <pre class="code"><span class="k" data-t="sr.1">when</span> <span data-t="sr.2">a request is submitted</span>
+  <span data-t="sr.3">ask the branch manager to approve</span>
+  <span data-t="sr.4">then send it to purchasing</span>
+  <span data-t="sr.5">at 17:00 add it to the chat summary</span>
+<span class="c" data-t="sr.6"># your process, written down</span></pre>
+          </div>
+          <div class="sat sat-phone" role="group"
+            aria-label="Example approval notification on the branch manager's phone">
+            <div class="ph-top"><span>09:13</span><span data-t="sp.who">Branch manager</span></div>
+            <div class="ph-card"><small data-t="sp.k">Approval needed</small><b data-t="sp.b">PR-1042 · Printer paper,
+                10 reams</b><span>Trenggalek · Rp450.000</span>
+              <div class="ph-btns"><span data-t="sp.no">Decline</span><span data-t="sp.yes">Approve</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec work-sec" id="work" aria-labelledby="work-t">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 id="work-t" data-t="work.h">Systems we’re building.</h2><a class="more" href="#work"
+            data-t="work.more">All work</a>
+        </div>
+        <div class="v4" id="v4" data-sel="pos">
+          <div class="syswin">
+            <div class="win" data-p="pos" role="group"
+              aria-label="Illustration of the point-of-sale system, sample data. Tap items to try it." data-ta="w.pos">
+              <div class="wbar"><span style="color:var(--text);font-weight:600" data-t="tab.pos">Point of
+                  sale</span><span data-t="pos.c">· Counter 1</span><em class="tag" data-t="ill">Illustration · sample
+                  data</em></div>
+              <div class="wbody pos">
+                <div>
+                  <div class="items">
+                    <button type="button" class="item" data-n="Nasi goreng" data-v="18000"><b>Nasi goreng</b><small
+                        class="num">Rp18.000</small></button>
+                    <button type="button" class="item" data-n="Mie ayam" data-v="15000"><b>Mie ayam</b><small
+                        class="num">Rp15.000</small></button>
+                    <button type="button" class="item" data-n="Kopi susu" data-v="12000"><b>Kopi susu</b><small
+                        class="num">Rp12.000</small></button>
+                    <button type="button" class="item" data-n="Es teh" data-v="5000"><b>Es teh</b><small
+                        class="num">Rp5.000</small></button>
+                    <button type="button" class="item" data-n="Air mineral" data-v="4000"><b>Air mineral</b><small
+                        class="num">Rp4.000</small></button>
+                    <button type="button" class="item" data-n="Gorengan" data-v="2000"><b>Gorengan</b><small
+                        class="num">Rp2.000</small></button>
+                  </div>
+                  <p class="cflow"><b data-t="pos.core">Core flow only:</b> <span data-t="pos.flow">pick items → total →
+                      pay → receipt</span></p>
+                </div>
+                <div class="cart" aria-live="polite">
+                  <h4 data-t="pos.order">Current order</h4>
+                  <div class="clines"></div>
+                  <div class="ctot"><span>Total</span><span class="num csum"></span></div><button type="button"
+                    class="cpay"></button>
+                </div>
+              </div>
+            </div>
+            <div class="win" data-p="run" role="group"
+              aria-label="Illustration of Runut, drawn from the plan; not built yet" data-ta="w.run">
+              <div class="wbar">Runut <span data-t="rn.c">· Production</span><em class="tag"
+                  data-t="rn.tag">Illustration · from the plan</em></div>
+              <div class="wbody">
+                <div class="rn-h"><b data-t="rn.o">School A · Class of 2027</b><span data-t="rn.s">Sample order</span>
+                </div>
+                <div class="stages">
+                  <div class="done" data-t="rn.1">Student data</div>
+                  <div class="done" data-t="rn.2">Photo session</div>
+                  <div class="now" data-t="rn.3">Layout</div>
+                  <div data-t="rn.4">Proof</div>
+                  <div data-t="rn.5">Print</div>
+                </div>
+                <div class="rn">
+                  <table>
+                    <tr>
+                      <td data-t="rn.r1">Student forms</td>
+                      <td class="num">212 / 240</td>
+                    </tr>
+                    <tr>
+                      <td data-t="rn.r2">Export for designers</td>
+                      <td><span class="chip ok" data-t="rn.ready">Ready</span></td>
+                    </tr>
+                    <tr>
+                      <td data-t="rn.r3">Consent under the PDP Law</td>
+                      <td><span class="chip ok" data-t="rn.rec">Recorded per student</span></td>
+                    </tr>
+                    <tr>
+                      <td data-t="rn.r4">Next stage</td>
+                      <td data-t="rn.4">Proof</td>
+                    </tr>
+                  </table>
+                  <div class="form">
+                    <h4 data-t="rn.f">Student data form</h4>
+                    <div class="sub" data-t="rn.o">School A · Class of 2027</div>
+                    <div class="fld"><small data-t="rn.fn">Full name</small>
+                      <div>—</div>
+                    </div>
+                    <div class="fld"><small data-t="rn.fc">Class</small>
+                      <div>12 IPA 2</div>
+                    </div>
+                    <div class="ck"><i>✓</i><span data-t="rn.fa">I agree to how my data is used (PDP Law)</span></div>
+                    <div class="go" data-t="rn.fs">Submit</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="win" data-p="fin" role="group"
+              aria-label="Example finance dashboard with sample data; not a client project" data-ta="w.fin">
+              <div class="wbar"><span style="color:var(--text);font-weight:600" data-t="fin.t">Finance</span><span
+                  data-t="fin.m">· This quarter</span><em class="tag" data-t="ex">Example · not a client project</em>
+              </div>
+              <div class="wbody">
+                <div class="kpis">
+                  <div class="kpi"><small data-t="fin.k1">Money in</small><b class="num">Rp412.600.000</b></div>
+                  <div class="kpi"><small data-t="fin.k2">Money out</small><b class="num">Rp318.900.000</b></div>
+                  <div class="kpi"><small data-t="fin.k3">Unpaid invoices</small><b class="num">Rp27.400.000</b></div>
+                </div>
+                <div class="fin">
+                  <div class="chartbox">
+                    <div class="legend"><span><i></i><span data-t="fin.k1">Money in</span></span><span><i
+                          class="out"></i><span data-t="fin.k2">Money out</span></span></div>
+                    <svg class="chart" viewBox="0 0 600 170" preserveAspectRatio="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="gfin" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0" stop-color="#E4927F" stop-opacity=".28" />
+                          <stop offset="1" stop-color="#E4927F" stop-opacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M0 110 C60 100 90 82 150 86 S250 62 300 68 S400 44 450 52 S540 28 600 32 L600 170 L0 170Z"
+                        fill="url(#gfin)" />
+                      <path d="M0 110 C60 100 90 82 150 86 S250 62 300 68 S400 44 450 52 S540 28 600 32" fill="none"
+                        stroke="#E4927F" stroke-width="2" />
+                      <path d="M0 134 C60 128 100 120 150 122 S250 108 300 112 S400 98 450 104 S540 92 600 94"
+                        fill="none" stroke="#7D716A" stroke-width="2" stroke-dasharray="4 5" />
+                    </svg>
+                  </div>
+                  <div class="inv">
+                    <h4 data-t="fin.k3">Unpaid invoices</h4>
+                    <div class="irow"><span>INV-0318</span><span class="num">Rp12.500.000</span><span class="chip wait"
+                        data-t="fin.due">Due in 5 days</span></div>
+                    <div class="irow"><span>INV-0312</span><span class="num">Rp9.900.000</span><span class="chip wait"
+                        data-t="fin.due2">Due in 12 days</span></div>
+                    <div class="irow"><span>INV-0305</span><span class="num">Rp5.000.000</span><span class="chip ok"
+                        data-t="fin.part">Partly paid</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="thread" aria-live="polite">
+            <div class="th-top"><span style="color:var(--text);font-weight:600" data-t="th.t">Projects</span><span>·
+                Kala Studio</span></div>
+            <div class="th-tabs" role="tablist" aria-label="Projects" data-ta="th.t">
+              <button type="button" role="tab" aria-selected="true" data-p="pos" data-t="tab.pos">Point of
+                sale</button><button type="button" role="tab" aria-selected="false" data-p="run">Runut</button><button
+                type="button" role="tab" aria-selected="false" data-p="fin" data-t="tab.fin">Finance dashboard</button>
+            </div>
+            <div class="th-body" id="th-body"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec wrap" id="services" aria-labelledby="svc-t">
+      <div class="sec-head">
+        <h2 id="svc-t" data-t="svc.h">What we build.</h2>
+        <p data-t="svc.p">Every system is designed and engineered by the same team.</p>
+      </div>
+      <ul class="svc" id="svc">
+        <li class="w3">
+          <div class="vig" role="group" aria-label="Illustration: sales per branch today. Choose a branch."
+            data-ta="v1.a"><em class="tag vtag" data-t="ill2">Illustration</em>
+            <div class="vchips" id="v1-b"><button type="button" class="vbtn" data-b="all" aria-pressed="true"
+                data-t="v1.all">All branches</button><button type="button" class="vbtn" data-b="tg"
+                aria-pressed="false">Trenggalek</button><button type="button" class="vbtn" data-b="ta"
+                aria-pressed="false">Tulungagung</button></div>
+            <div aria-live="polite">
+              <div class="vrow"><span data-t="v1.r1">Sales today</span><b class="num" id="v1-s">Rp4.860.000</b></div>
+              <div class="vrow"><span data-t="v1.r2">Transactions</span><b class="num" id="v1-t">142</b></div>
+              <div class="vrow"><span data-t="v1.r3">Low stock</span><span class="chip wait" id="v1-l">3 items</span>
+              </div>
+            </div>
+          </div>
+          <div class="txt"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+              <rect x="2.5" y="3" width="11" height="8" rx="1.5" />
+              <path d="M5 13.5h6M8 11v2.5" />
+            </svg>
+            <h3 data-t="s1.h">Point of sale & store operations</h3>
+            <p data-t="s1.p">Sales, stock, and branches in one place.</p>
+          </div>
+        </li>
+        <li class="w3">
+          <div class="vig" role="group" aria-label="Illustration: a cash balance with a trend line. Choose a period."
+            data-ta="v2.a"><em class="tag vtag" data-t="ill2">Illustration</em>
+            <div class="vhead">
+              <div class="vkpi"><small data-t="v2.k">Cash balance</small><b class="num">Rp93.700.000</b><span
+                  class="chip ok num" id="v2-d" aria-live="polite">+Rp4.200.000</span></div>
+              <div class="vchips" id="v2-r" style="margin:0"><button type="button" class="vbtn" data-r="7"
+                  aria-pressed="true" data-t="v2.r7">7 days</button><button type="button" class="vbtn" data-r="30"
+                  aria-pressed="false" data-t="v2.r30">30 days</button></div>
+            </div>
+            <svg class="vspark" viewBox="0 0 300 70" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="gsp" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#E4927F" stop-opacity=".25" />
+                  <stop offset="1" stop-color="#E4927F" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path id="v2-a" fill="url(#gsp)" />
+              <path id="v2-l" fill="none" stroke="#E4927F" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="txt"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M3 13V8M8 13V4M13 13V9.5" />
+            </svg>
+            <h3 data-t="s2.h">Dashboards & finance</h3>
+            <p data-t="s2.p">The numbers you check every day, without the spreadsheet.</p>
+          </div>
+        </li>
+        <li class="w2">
+          <div class="vig" role="group"
+            aria-label="Illustration: a request moving through approval steps. Move it to the next step."
+            data-ta="v3.a"><em class="tag vtag" data-t="ill2">Illustration</em>
+            <div class="vflow" id="v3-f" aria-live="polite"></div>
+            <div class="vact"><button type="button" class="vgo ghost" id="v3-b"></button></div>
+          </div>
+          <div class="txt"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="4" cy="4" r="1.6" />
+              <circle cx="12" cy="12" r="1.6" />
+              <path d="M4 5.6V9a3 3 0 003 3h3.4" />
+            </svg>
+            <h3 data-t="s3.h">Internal workflows</h3>
+            <p data-t="s3.p">Requests, approvals, production, and data collection, in the order your team works.</p>
+          </div>
+        </li>
+        <li class="w2">
+          <div class="vig" role="group" aria-label="Illustration: a booking form. Choose a time and book."
+            data-ta="v4.a"><em class="tag vtag" data-t="ill2">Illustration</em>
+            <div class="vfield"><small data-t="v4.d">Date</small>
+              <div data-t="v4.dv">Sat, 18 Oct</div>
+            </div>
+            <div class="vslots" id="v4-s"><button type="button" class="vbtn" aria-pressed="false">09.00</button><button
+                type="button" class="vbtn" aria-pressed="true">10.30</button><button type="button" class="vbtn"
+                aria-pressed="false">13.00</button></div>
+            <button type="button" class="vgo" id="v4-b"></button>
+            <div class="vok" id="v4-o" aria-live="polite"></div>
+          </div>
+          <div class="txt"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+              <rect x="3" y="2.5" width="10" height="11" rx="1.5" />
+              <path d="M5.5 6h5M5.5 8.5h5M5.5 11h3" />
+            </svg>
+            <h3 data-t="s4.h">Customer portals</h3>
+            <p data-t="s4.p">Forms, registrations, and bookings your customers handle themselves.</p>
+          </div>
+        </li>
+        <li class="w2">
+          <div class="vig" role="group"
+            aria-label="Illustration: asking the system a question in a chat. Pick a question." data-ta="v5.a"><em
+              class="tag vtag" data-t="ill2">Illustration</em>
+            <div>
+              <div class="vq" id="v5-q"></div>
+              <div class="va"><small><svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M8 1.5l1.6 3.9 3.9 1.6-3.9 1.6L8 12.5 6.4 8.6 2.5 7l3.9-1.6z" />
+                  </svg><span data-t="v5.f">From your data</span></small>
+                <div class="vthink" id="v5-t" hidden><i></i><i></i><i></i><span data-t="v5.th">Reading your data…</span>
+                </div><span id="v5-a" aria-live="polite"></span>
+              </div>
+            </div>
+            <div class="vqs" id="v5-c"><button type="button" class="vbtn" data-q="0"
+                aria-pressed="true"></button><button type="button" class="vbtn" data-q="1"
+                aria-pressed="false"></button><button type="button" class="vbtn" data-q="2"
+                aria-pressed="false"></button></div>
+          </div>
+          <div class="txt"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M8 2.5l1.3 3.2 3.2 1.3-3.2 1.3L8 11.5 6.7 8.3 3.5 7l3.2-1.3z" />
+            </svg>
+            <h3 data-t="s5.h">AI inside your system</h3>
+            <p data-t="s5.p">Automatic recaps, and answers about your data in a chat.</p>
+          </div>
+        </li>
+        <li class="w6">
+          <div class="vig"><em class="tag vtag" data-t="ill2">Illustration</em>
+            <div class="vcmp" id="v6">
+              <div class="vlayer before" aria-hidden="true">
+                <h4 data-t="v6.b">Before</h4>
+                <div class="vbad">
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="vnote"><i>1</i><span data-t="v6.n1">Twelve options on the first screen; the main task is
+                    hard to find.</span></div>
+              </div>
+              <div class="vlayer after" aria-hidden="true">
+                <h4 data-t="v6.a2">After</h4>
+                <div class="vgood">
+                  <div class="vstep"><b data-t="v6.g1">New order</b></div>
+                  <div class="vstep"><b data-t="v6.g2">Today’s orders</b></div>
+                  <div class="go" data-t="v6.g3">Start</div>
+                </div>
+                <div class="vnote"><i>1</i><span data-t="v6.n2">The main task comes first. The rest moves to a
+                    menu.</span></div>
+              </div>
+              <div class="vhandle"></div>
+              <input type="range" min="0" max="100" value="50"
+                aria-label="Compare the screen before and after the UX review" data-ta="v6.cmp">
+            </div>
+            <p class="vhint" data-t="v6.h">Drag to compare. Illustration, not a client app.</p>
+          </div>
+          <div class="txt"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="7" cy="7" r="4" />
+              <path d="M10 10l3 3" />
+            </svg>
+            <h3 data-t="s6.h">UX redesign & audit</h3>
+            <p data-t="s6.p">Find what slows people down in an app you already have, and fix it.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="sec wrap" id="how" aria-labelledby="how-t">
+      <div class="sec-head">
+        <h2 id="how-t" data-t="how.h">How we work.</h2>
+      </div>
+      <ol class="how">
+        <li class="hcard">
+          <div class="hart"><svg class="hiso hiso-1" viewBox="0 0 320 224" aria-hidden="true" focusable="false">
+              <polygon points="160.0,86.6 228.2,126.0 160.0,165.4 91.8,126.0" fill="none" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" stroke-dasharray="3 4" />
+              <g class="t" style="--dx:-34px;--dy:-26px;--k:0">
+                <polygon points="143.0,102.5 160.0,112.3 160.0,107.0 143.0,97.2" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="177.0,102.5 160.0,112.3 160.0,107.0 177.0,97.2" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,87.4 177.0,97.2 160.0,107.0 143.0,97.2" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="t" style="--dx:8px;--dy:-40px;--k:1">
+                <polygon points="122.6,114.2 139.6,124.1 139.6,118.8 122.6,109.0" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="156.7,114.2 139.6,124.1 139.6,118.8 156.7,109.0" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="139.6,99.1 156.7,109.0 139.6,118.8 122.6,109.0" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="t" style="--dx:-46px;--dy:6px;--k:2">
+                <polygon points="163.3,114.2 180.4,124.1 180.4,118.8 163.3,109.0" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="197.4,114.2 180.4,124.1 180.4,118.8 197.4,109.0" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="180.4,99.1 197.4,109.0 180.4,118.8 163.3,109.0" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="t" style="--dx:40px;--dy:-14px;--k:3">
+                <polygon points="102.2,126.0 119.3,135.8 119.3,130.6 102.2,120.7" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="136.3,126.0 119.3,135.8 119.3,130.6 136.3,120.7" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="119.3,110.9 136.3,120.7 119.3,130.6 102.2,120.7" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="t" style="--dx:0px;--dy:-18px;--k:4">
+                <polygon points="143.0,126.0 160.0,135.8 160.0,130.6 143.0,120.7" fill="#5E2724" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="177.0,126.0 160.0,135.8 160.0,130.6 177.0,120.7" fill="#76302C" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,110.9 177.0,120.7 160.0,130.6 143.0,120.7" fill="#9C413D" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="t" style="--dx:-30px;--dy:30px;--k:5">
+                <polygon points="183.7,126.0 200.7,135.8 200.7,130.6 183.7,120.7" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="217.8,126.0 200.7,135.8 200.7,130.6 217.8,120.7" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="200.7,110.9 217.8,120.7 200.7,130.6 183.7,120.7" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="t" style="--dx:48px;--dy:16px;--k:6">
+                <polygon points="122.6,137.8 139.6,147.6 139.6,142.3 122.6,132.5" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="156.7,137.8 139.6,147.6 139.6,142.3 156.7,132.5" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="139.6,122.6 156.7,132.5 139.6,142.3 122.6,132.5" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="t" style="--dx:14px;--dy:36px;--k:7">
+                <polygon points="163.3,137.8 180.4,147.6 180.4,142.3 163.3,132.5" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="197.4,137.8 180.4,147.6 180.4,142.3 197.4,132.5" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="180.4,122.6 197.4,132.5 180.4,142.3 163.3,132.5" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="t" style="--dx:44px;--dy:44px;--k:8">
+                <polygon points="143.0,149.5 160.0,159.4 160.0,154.1 143.0,144.2" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="177.0,149.5 160.0,159.4 160.0,154.1 177.0,144.2" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,134.4 177.0,144.2 160.0,154.1 143.0,144.2" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+            </svg></div>
+          <div class="txt"><span class="n">1</span>
+            <h3 data-t="h1.h">Understand</h3>
+            <p data-t="h1.p">We learn how your work runs today.</p>
+          </div>
+        </li>
+        <li class="hcard">
+          <div class="hart"><svg class="hiso hiso-2" viewBox="0 0 320 224" aria-hidden="true" focusable="false">
+              <g class="pl" style="--i:0">
+                <polygon points="103.9,126.0 160.0,158.4 160.0,154.6 103.9,122.2" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="216.1,126.0 160.0,158.4 160.0,154.6 216.1,122.2" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,89.8 216.1,122.2 160.0,154.6 103.9,122.2" fill="#241D19" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="pl" style="--i:1">
+                <polygon points="103.9,126.0 160.0,158.4 160.0,154.6 103.9,122.2" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="216.1,126.0 160.0,158.4 160.0,154.6 216.1,122.2" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,89.8 216.1,122.2 160.0,154.6 103.9,122.2" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <line x1="152.2" y1="101.5" x2="195.9" y2="126.7" stroke="#4A3D36" />
+                <line x1="138.2" y1="109.6" x2="181.8" y2="134.8" stroke="#4A3D36" />
+                <line x1="124.1" y1="117.7" x2="167.8" y2="142.9" stroke="#4A3D36" />
+              </g>
+              <g class="pl" style="--i:2">
+                <polygon points="103.9,126.0 160.0,158.4 160.0,154.6 103.9,122.2" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="216.1,126.0 160.0,158.4 160.0,154.6 216.1,122.2" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,89.8 216.1,122.2 160.0,154.6 103.9,122.2" fill="#302723" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,106.6 187.0,122.2 160.0,137.8 133.0,122.2" fill="#241D19" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="pl" style="--i:3">
+                <polygon points="103.9,126.0 160.0,158.4 160.0,154.6 103.9,122.2" fill="#1A1412" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="216.1,126.0 160.0,158.4 160.0,154.6 216.1,122.2" fill="#221B18" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,89.8 216.1,122.2 160.0,154.6 103.9,122.2" fill="#342A25" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,112.6 176.6,122.2 160.0,131.8 143.4,122.2" fill="#9C413D" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+            </svg></div>
+          <div class="txt"><span class="n">2</span>
+            <h3 data-t="h2.h">Design &amp; build</h3>
+            <p data-t="h2.p">Small, regular releases you can try, checked by QA before they reach you.</p>
+          </div>
+        </li>
+        <li class="hcard">
+          <div class="hart"><svg class="hiso hiso-3" viewBox="0 0 320 224" aria-hidden="true" focusable="false">
+              <polygon points="89.3,129.4 160.0,170.2 160.0,166.8 89.3,126.0" fill="#120E0C" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="230.7,129.4 160.0,170.2 160.0,166.8 230.7,126.0" fill="#17110F" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="160.0,85.2 230.7,126.0 160.0,166.8 89.3,126.0" fill="#1F1916" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <ellipse class="ring" cx="160.0" cy="109.2" rx="69.1" ry="39.9" fill="none" stroke="#3A302B"
+                stroke-width="1.2" stroke-dasharray="2 5" />
+              <g transform="translate(160.0 109.2) scale(1 0.5774)">
+                <g class="orbit-spin">
+                  <circle cx="69.1" cy="0" r="6" fill="#E4927F" />
+                </g>
+              </g>
+              <g class="cube">
+                <polygon points="126.7,126.0 160.0,145.2 160.0,106.8 126.7,87.6" fill="#1D1714" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="193.3,126.0 160.0,145.2 160.0,106.8 193.3,87.6" fill="#261E1A" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,68.4 193.3,87.6 160.0,106.8 126.7,87.6" fill="#342A25" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="160.0,76.8 178.7,87.6 160.0,98.4 141.3,87.6" fill="#9C413D" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <clipPath id="near-half">
+                <rect x="0" y="109.2" width="320" height="114.8" />
+              </clipPath>
+              <g clip-path="url(#near-half)">
+                <g transform="translate(160.0 109.2) scale(1 0.5774)">
+                  <g class="orbit-spin">
+                    <circle cx="69.1" cy="0" r="6" fill="#E4927F" />
+                  </g>
+                </g>
+              </g>
+            </svg></div>
+          <div class="txt"><span class="n">3</span>
+            <h3 data-t="h3.h">Launch &amp; look after</h3>
+            <p data-t="h3.p">We launch the core, see how it’s used, and decide the next step together.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="sec wrap" id="who" aria-labelledby="who-t">
+      <div class="sec-head">
+        <h2 id="who-t" data-t="who.h">For work that off‑the‑shelf apps don’t fit.</h2>
+      </div>
+      <ul class="who">
+        <li class="wcard">
+          <div class="wart"><svg class="wiso wiso-1" viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+              <polygon points="43.6,86.5 120.0,130.6 120.0,128.1 43.6,84.0" fill="#120E0C" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="196.4,86.5 120.0,130.6 120.0,128.1 196.4,84.0" fill="#17110F" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="120.0,39.9 196.4,84.0 120.0,128.1 43.6,84.0" fill="#1F1916" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <g class="lift" style="--k:0">
+                <polygon points="98.2,60.9 120.0,73.5 120.0,52.5 98.2,39.9" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="141.8,60.9 120.0,73.5 120.0,52.5 141.8,39.9" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,27.3 141.8,39.9 120.0,52.5 98.2,39.9" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:1">
+                <polygon points="132.7,80.8 154.6,93.5 154.6,59.9 132.7,47.2" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="176.4,80.8 154.6,93.5 154.6,59.9 176.4,47.2" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="154.6,34.6 176.4,47.2 154.6,59.9 132.7,47.2" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:2">
+                <polygon points="63.6,80.8 85.4,93.5 85.4,76.7 63.6,64.0" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="107.3,80.8 85.4,93.5 85.4,76.7 107.3,64.0" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="85.4,51.5 107.3,64.0 85.4,76.7 63.6,64.0" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:3">
+                <polygon points="98.2,100.8 120.0,113.4 120.0,67.2 98.2,54.6" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="141.8,100.8 120.0,113.4 120.0,67.2 141.8,54.6" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,42.0 141.8,54.6 120.0,67.2 98.2,54.6" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="107.3,54.6 120.0,61.9 120.0,60.7 107.3,53.3" fill="#5E2724" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="132.7,54.6 120.0,61.9 120.0,60.7 132.7,53.3" fill="#76302C" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,46.0 132.7,53.3 120.0,60.7 107.3,53.3" fill="#9C413D" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+            </svg></div>
+          <div class="txt">
+            <h3 data-t="w1.h">Companies</h3>
+            <p data-t="w1.p">From a single shop to several branches.</p>
+            <div class="typ"><small data-t="w.typ">What we usually build</small><span data-t="w1.t">Point of sale, stock
+                across branches, finance dashboards.</span></div>
+          </div>
+        </li>
+        <li class="wcard">
+          <div class="wart"><svg class="wiso wiso-2" viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+              <polygon points="43.6,86.5 120.0,130.6 120.0,128.1 43.6,84.0" fill="#120E0C" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="196.4,86.5 120.0,130.6 120.0,128.1 196.4,84.0" fill="#17110F" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="120.0,39.9 196.4,84.0 120.0,128.1 43.6,84.0" fill="#1F1916" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <g class="lift" style="--k:0">
+                <polygon points="61.8,84.0 120.0,117.6 120.0,102.9 61.8,69.3" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="178.2,84.0 120.0,117.6 120.0,102.9 178.2,69.3" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,35.7 178.2,69.3 120.0,102.9 61.8,69.3" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:1">
+                <polygon points="78.2,69.3 120.0,93.4 120.0,78.8 78.2,54.6" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="161.8,69.3 120.0,93.4 120.0,78.8 161.8,54.6" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,30.5 161.8,54.6 120.0,78.8 78.2,54.6" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:2">
+                <polygon points="94.5,54.6 120.0,69.3 120.0,54.6 94.5,39.9" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="145.5,54.6 120.0,69.3 120.0,54.6 145.5,39.9" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,25.2 145.5,39.9 120.0,54.6 94.5,39.9" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:3">
+                <polygon points="107.3,39.9 120.0,47.2 120.0,39.9 107.3,32.5" fill="#5E2724" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="132.7,39.9 120.0,47.2 120.0,39.9 132.7,32.5" fill="#76302C" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,25.2 132.7,32.5 120.0,39.9 107.3,32.5" fill="#9C413D" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+            </svg></div>
+          <div class="txt">
+            <h3 data-t="w2.h">Institutions</h3>
+            <p data-t="w2.p">Your own process, data, and reports.</p>
+            <div class="typ"><small data-t="w.typ">What we usually build</small><span data-t="w2.t">Internal workflows,
+                data collection, reports.</span></div>
+          </div>
+        </li>
+        <li class="wcard">
+          <div class="wart"><svg class="wiso wiso-3" viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+              <polygon points="43.6,86.5 120.0,130.6 120.0,128.1 43.6,84.0" fill="#120E0C" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="196.4,86.5 120.0,130.6 120.0,128.1 196.4,84.0" fill="#17110F" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="120.0,39.9 196.4,84.0 120.0,128.1 43.6,84.0" fill="#1F1916" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <ellipse cx="120.0" cy="83.6" rx="37.3" ry="21.5" fill="none" stroke="#3A302B" stroke-dasharray="2 4" />
+              <line x1="93.6" y1="98.8" x2="120.0" y2="83.6" stroke="#3A302B" stroke-dasharray="2 3" />
+              <line x1="86.8" y1="73.8" x2="120.0" y2="83.6" stroke="#3A302B" stroke-dasharray="2 3" />
+              <line x1="125.8" y1="62.3" x2="120.0" y2="83.6" stroke="#3A302B" stroke-dasharray="2 3" />
+              <line x1="156.8" y1="80.2" x2="120.0" y2="83.6" stroke="#3A302B" stroke-dasharray="2 3" />
+              <line x1="136.9" y1="102.8" x2="120.0" y2="83.6" stroke="#3A302B" stroke-dasharray="2 3" />
+              <g class="lift" style="--k:0">
+                <polygon points="115.6,62.7 125.8,68.6 125.8,56.9 115.6,51.0" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="136.0,62.7 125.8,68.6 125.8,56.9 136.0,51.0" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="125.8,45.1 136.0,51.0 125.8,56.9 115.6,51.0" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:1">
+                <polygon points="76.6,74.2 86.8,80.1 86.8,68.3 76.6,62.5" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="97.0,74.2 86.8,80.1 86.8,68.3 97.0,62.5" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="86.8,56.6 97.0,62.5 86.8,68.3 76.6,62.5" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:2">
+                <polygon points="146.6,80.6 156.8,86.5 156.8,74.8 146.6,68.9" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="167.0,80.6 156.8,86.5 156.8,74.8 167.0,68.9" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="156.8,63.0 167.0,68.9 156.8,74.8 146.6,68.9" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:3">
+                <polygon points="107.3,84.0 120.0,91.3 120.0,76.6 107.3,69.3" fill="#5E2724" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="132.7,84.0 120.0,91.3 120.0,76.6 132.7,69.3" fill="#76302C" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,62.0 132.7,69.3 120.0,76.6 107.3,69.3" fill="#9C413D" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:4">
+                <polygon points="83.4,99.2 93.6,105.1 93.6,93.3 83.4,87.5" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="103.8,99.2 93.6,105.1 93.6,93.3 103.8,87.5" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="93.6,81.6 103.8,87.5 93.6,93.3 83.4,87.5" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+              <g class="lift" style="--k:5">
+                <polygon points="126.7,103.2 136.9,109.1 136.9,97.3 126.7,91.4" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="147.1,103.2 136.9,109.1 136.9,97.3 147.1,91.4" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="136.9,85.5 147.1,91.4 136.9,97.3 126.7,91.4" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+            </svg></div>
+          <div class="txt">
+            <h3 data-t="w3.h">Organizations</h3>
+            <p data-t="w3.p">Schools, foundations, cooperatives, and communities.</p>
+            <div class="typ"><small data-t="w.typ">What we usually build</small><span data-t="w3.t">Member portals,
+                registrations, internal workflows.</span></div>
+          </div>
+        </li>
+        <li class="wcard">
+          <div class="wart"><svg class="wiso wiso-4" viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+              <polygon points="80.0,86.5 120.0,109.6 120.0,107.1 80.0,84.0" fill="#120E0C" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="160.0,86.5 120.0,109.6 120.0,107.1 160.0,84.0" fill="#17110F" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <polygon points="120.0,60.9 160.0,84.0 120.0,107.1 80.0,84.0" fill="#1F1916" stroke="#3A302B"
+                stroke-width="1" stroke-linejoin="round" />
+              <g class="lift" style="--k:0">
+                <polygon points="96.4,84.0 120.0,97.7 120.0,70.4 96.4,56.7" fill="#1A1412" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="143.6,84.0 120.0,97.7 120.0,70.4 143.6,56.7" fill="#221B18" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,43.0 143.6,56.7 120.0,70.4 96.4,56.7" fill="#2B231F" stroke="#4A3D36"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="107.3,56.7 120.0,64.0 120.0,62.8 107.3,55.4" fill="#5E2724" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="132.7,56.7 120.0,64.0 120.0,62.8 132.7,55.4" fill="#76302C" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+                <polygon points="120.0,48.1 132.7,55.4 120.0,62.8 107.3,55.4" fill="#9C413D" stroke="#E4927F"
+                  stroke-width="1" stroke-linejoin="round" />
+              </g>
+            </svg></div>
+          <div class="txt">
+            <h3 data-t="w4.h">Individuals</h3>
+            <p data-t="w4.p">A system built for the way you work alone.</p>
+            <div class="typ"><small data-t="w.typ">What we usually build</small><span data-t="w4.t">One focused tool,
+                made to fit how you work.</span></div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="sec wrap" id="faq" aria-labelledby="faq-t">
+      <div class="faq-wrap">
+        <div class="faq-side">
+          <h2 id="faq-t" data-t="faq.h">Questions.</h2>
+        </div>
+        <div class="faq">
+          <details name="faq" open>
+            <summary><span data-t="f1.q">Who owns the code?</span><svg class="ic" viewBox="0 0 16 16"
+                aria-hidden="true">
+                <path d="M8 3v10M3 8h10" />
+              </svg></summary>
+            <p data-t="f1.a">You do, once the project is paid in full.</p>
+          </details>
+          <details name="faq">
+            <summary><span data-t="f2.q">How long does a project take?</span><svg class="ic" viewBox="0 0 16 16"
+                aria-hidden="true">
+                <path d="M8 3v10M3 8h10" />
+              </svg></summary>
+            <p data-t="f2.a">It depends on what the system needs to do. We give you an estimate once we understand your
+              needs.</p>
+          </details>
+          <details name="faq">
+            <summary><span data-t="f3.q">How much does it cost?</span><svg class="ic" viewBox="0 0 16 16"
+                aria-hidden="true">
+                <path d="M8 3v10M3 8h10" />
+              </svg></summary>
+            <p data-t="f3.a">Every system is different, so we quote after we understand what you need.</p>
+          </details>
+          <details name="faq">
+            <summary><span data-t="f4.q">Can you continue an app someone else built?</span><svg class="ic"
+                viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M8 3v10M3 8h10" />
+              </svg></summary>
+            <p data-t="f4.a">Case by case. It depends on the technology and the state of the code.</p>
+          </details>
+          <details name="faq">
+            <summary><span data-t="f5.q">Do you work with clients outside Indonesia?</span><svg class="ic"
+                viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M8 3v10M3 8h10" />
+              </svg></summary>
+            <p data-t="f5.a">Yes. We work remotely, in English.</p>
+          </details>
+          <details name="faq">
+            <summary><span data-t="f6.q">What happens after launch?</span><svg class="ic" viewBox="0 0 16 16"
+                aria-hidden="true">
+                <path d="M8 3v10M3 8h10" />
+              </svg></summary>
+            <p data-t="f6.a">We see how the system is used and decide the next step with you.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="contact" aria-labelledby="start-t">
+      <div class="start">
+        <div class="start-in">
+          <div>
+            <h2 id="start-t" data-t="st.h">Start a project.</h2>
+            <p class="lead" data-t="st.p">Tell us how your work runs today. A few sentences is enough.</p>
+            <p class="mail"><a href="mailto:team@kalastudioai.com">team@kalastudioai.com</a></p>
+          </div>
+          <form id="form" novalidate>
+            <div class="f"><label for="f-name" data-t="fl1">Name</label><input id="f-name" name="name"
+                autocomplete="name" required></div>
+            <div class="f"><label for="f-email" data-t="fl2">Email</label><input id="f-email" name="email" type="email"
+                autocomplete="email" required></div>
+            <div class="f full"><label for="f-org"><span data-t="fl3">Organization</span> <small
+                  data-t="opt">(optional)</small></label><input id="f-org" name="org" autocomplete="organization"></div>
+            <div class="f full"><label for="f-msg" data-t="fl4">What do you need?</label><textarea id="f-msg" name="msg"
+                required data-tp="ph"
+                placeholder="Orders come in through chat, stock lives in a spreadsheet…"></textarea></div>
+            <div class="f-foot"><button class="btn" type="submit" data-t="send">Send</button>
+              <p class="fnote"><span data-t="note">Goes to team@kalastudioai.com. Used only to reply to you.</span>
+                <span data-t="cons">By sending, you agree to our</span> <a href="privacy.html" data-t="cons.l">Privacy
+                  Policy</a>.</p>
+              <p class="sent" role="status" hidden data-t="sent">Concept only: nothing was sent.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="ft-top">
+        <div class="ft-brand"><a class="wm" href="#top" aria-label="Kala Studio"><span class="logo"
+              aria-hidden="true"><svg viewBox="0 0 768.8 541.4">
+                <use href="#kmark" />
+              </svg></span></a>
+          <p data-t="ft.p">Custom software, designed and engineered by one team.</p>
+        </div>
+        <div class="ft-col">
+          <h3 data-t="ft.contact">Contact</h3><a href="mailto:team@kalastudioai.com">team@kalastudioai.com</a><span
+            data-t="ft.loc">Trenggalek, East Java, Indonesia</span>
+        </div>
+      </div>
+      <div class="ft-bot"><span class="ft-legal"><span>© 2026 PT Kala Studio Digital</span><a href="privacy.html"
+            data-t="ft.priv">Privacy</a><a href="terms.html" data-t="ft.terms">Terms</a></span></div>
+    </div>
+    <span class="ft-mark" aria-hidden="true">kala studio</span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script>
+    (function () {
+      var ID = {
+        'concept': 'Konsep · Beranda · copy draf',
+        'n1': 'Layanan', 'n2': 'Proyek', 'n3': 'Tentang', 'n4': 'Kontak', 'cta': 'Mulai proyek',
+        'h1': 'Software yang mengikuti proses Anda.', 'sub': 'Bukan sebaliknya. Dirancang dan dibangun oleh satu tim.',
+        'ws': 'Contoh PT', 'm1': 'Kotak masuk', 'm2': 'Permintaan saya', 'm3': 'Persetujuan', 'm4': 'Laporan', 'g1': 'Cabang', 'g2': 'Alur kerja', 'w1': 'Persetujuan pembelian', 'w2': 'Ringkasan harian',
+        'r2': 'Ganti router', 'desc': 'Router kantor putus dua kali sehari. Ganti dengan model yang sama seperti kantor pusat.', 'ok': 'Disetujui', 'act': 'Aktivitas',
+        'a1': 'Staf mengajukan permintaan lewat form · 09.12', 'a2': 'Manajer cabang menyetujui · 10.40', 'cm1': 'Manajer cabang · 10.40', 'cm2': 'Disetujui. Tolong model yang sama dengan kantor pusat.',
+        'a3': 'Bagian pembelian memesan · 13.05', 'a4': 'Masuk ringkasan hari ini ke chat tim · 17.00',
+        'as': 'Asisten', 'ex': 'Contoh · bukan proyek klien', 'q1': 'Apa yang masih menunggu persetujuan?', 'from': 'Dari permintaan pembelian Anda',
+        'ans1': 'Satu permintaan: kertas printer 10 rim untuk Trenggalek. Rp450.000, diajukan hari ini pukul 09.12.', 'ref': '· Menunggu manajer cabang',
+        'q2': 'Berapa pengeluaran minggu ini?', 'inp': 'Tanyakan tentang data Anda…',
+        'work.h': 'Sistem yang sedang kami bangun.', 'work.more': 'Semua proyek', 'learned': 'Yang kami pelajari',
+        'th.t': 'Proyek', 'tab.pos': 'Sistem kasir', 'tab.fin': 'Dashboard keuangan', 'ill': 'Ilustrasi · data contoh',
+        'pos.c': '· Konter 1', 'pos.core': 'Hanya alur inti:', 'pos.flow': 'pilih item → total → bayar → struk', 'pos.order': 'Pesanan saat ini',
+        'rn.c': '· Produksi', 'rn.tag': 'Ilustrasi · dari rencana', 'rn.o': 'Sekolah A · Angkatan 2027', 'rn.s': 'Pesanan contoh', 'rn.1': 'Data siswa', 'rn.2': 'Sesi foto', 'rn.3': 'Tata letak', 'rn.4': 'Proof', 'rn.5': 'Cetak',
+        'rn.r1': 'Form siswa', 'rn.r2': 'Ekspor untuk desainer', 'rn.r3': 'Persetujuan sesuai UU PDP', 'rn.r4': 'Tahap berikutnya', 'rn.ready': 'Siap', 'rn.rec': 'Tercatat per siswa',
+        'rn.f': 'Form data siswa', 'rn.fn': 'Nama lengkap', 'rn.fc': 'Kelas', 'rn.fa': 'Saya setuju data saya digunakan (UU PDP)', 'rn.fs': 'Kirim',
+        'fin.t': 'Keuangan', 'fin.m': '· Kuartal ini', 'fin.k1': 'Uang masuk', 'fin.k2': 'Uang keluar', 'fin.k3': 'Tagihan belum dibayar', 'fin.due': 'Jatuh tempo 5 hari', 'fin.due2': 'Jatuh tempo 12 hari', 'fin.part': 'Dibayar sebagian',
+        'w.pos': 'Ilustrasi sistem kasir, data contoh. Ketuk item untuk mencoba.', 'w.run': 'Ilustrasi Runut dari rencana; belum dibangun', 'w.fin': 'Contoh dashboard keuangan dengan data contoh; bukan proyek klien',
+        'svc.h': 'Yang kami bangun.', 'svc.p': 'Setiap sistem dirancang dan dibangun oleh tim yang sama.',
+        'ill2': 'Ilustrasi', 'v1.a': 'Ilustrasi: penjualan per cabang hari ini. Pilih cabang.', 'v1.all': 'Semua cabang', 'v1.r1': 'Penjualan hari ini', 'v1.r2': 'Transaksi', 'v1.r3': 'Stok menipis', 'v1.r3v': '3 item',
+        'v2.a': 'Ilustrasi: saldo kas dengan garis tren. Pilih periode.', 'v2.k': 'Saldo kas', 'v2.c': 'Diperbarui 08.00',
+        'v3.a': 'Ilustrasi: permintaan melewati langkah persetujuan. Majukan ke langkah berikutnya.', 'v3.s1': 'Diajukan', 'v3.s2': 'Disetujui', 'v3.s3': 'Dipesan', 'v3.now': 'sekarang',
+        'v4.a': 'Ilustrasi: form booking. Pilih jam lalu pesan.', 'v4.d': 'Tanggal', 'v4.dv': 'Sab, 18 Okt', 'v4.b': 'Pesan',
+        'v5.a': 'Ilustrasi: bertanya ke sistem lewat chat. Pilih pertanyaan.', 'v5.q': 'Produk apa yang paling laku minggu ini?', 'v5.f': 'Dari data Anda', 'v5.th': 'Membaca data Anda…', 'v5.ans': 'Kopi susu: 312 gelas, paling banyak antara 15.00 dan 17.00.',
+        'v6.cmp': 'Bandingkan layar sebelum dan sesudah tinjauan UX', 'v6.h': 'Geser untuk membandingkan. Ilustrasi, bukan aplikasi klien.', 'v2.r7': '7 hari', 'v2.r30': '30 hari', 'v6.b': 'Sebelum', 'v6.a2': 'Sesudah', 'v6.n1': 'Dua belas pilihan di layar pertama; tugas utama sulit ditemukan.', 'v6.g1': 'Pesanan baru', 'v6.g2': 'Pesanan hari ini', 'v6.g3': 'Mulai', 'v6.n2': 'Tugas utama tampil lebih dulu. Sisanya pindah ke menu.',
+        's1.h': 'Kasir & operasional toko', 's1.p': 'Penjualan, stok, dan cabang di satu tempat.',
+        's2.h': 'Dashboard & keuangan', 's2.p': 'Angka yang Anda cek setiap hari, tanpa spreadsheet.',
+        's3.h': 'Alur kerja internal', 's3.p': 'Permintaan, persetujuan, produksi, dan pendataan, sesuai urutan kerja tim Anda.',
+        's4.h': 'Portal pelanggan', 's4.p': 'Form, pendaftaran, dan booking yang diurus pelanggan sendiri.',
+        's5.h': 'AI di dalam sistem Anda', 's5.p': 'Rekap otomatis, dan jawaban tentang data Anda lewat chat.',
+        's6.h': 'Redesign & audit UX', 's6.p': 'Temukan yang memperlambat pengguna di aplikasi yang sudah ada, lalu perbaiki.',
+        'how.h': 'Cara kami bekerja.', 'h1.h': 'Pahami', 'h1.p': 'Kami pelajari bagaimana pekerjaan Anda berjalan hari ini.',
+        'h2.h': 'Rancang & bangun', 'h2.p': 'Rilis kecil dan rutin yang bisa langsung dicoba, dicek QA sebelum sampai ke Anda.',
+        'h3.h': 'Luncurkan & rawat', 'h3.p': 'Kami luncurkan yang inti, lihat cara pakainya, lalu putuskan langkah berikutnya bersama.',
+        'who.h': 'Untuk pekerjaan yang tidak cocok dengan aplikasi jadi.',
+        'w.typ': 'Biasanya kami bangun', 'w1.t': 'Kasir, stok antarcabang, dashboard keuangan.', 'w2.t': 'Alur kerja internal, pendataan, laporan.', 'w3.t': 'Portal anggota, pendaftaran, alur kerja internal.', 'w4.t': 'Satu alat yang fokus, dibuat sesuai cara kerja Anda.',
+        'w1.h': 'Perusahaan', 'w1.p': 'Dari satu toko sampai beberapa cabang.', 'w2.h': 'Instansi', 'w2.p': 'Proses, data, dan laporan Anda sendiri.',
+        'w3.h': 'Organisasi', 'w3.p': 'Sekolah, yayasan, koperasi, dan komunitas.', 'w4.h': 'Perorangan', 'w4.p': 'Sistem untuk cara Anda bekerja sendiri.',
+        'faq.h': 'Pertanyaan.',
+        'f1.q': 'Siapa pemilik kode?', 'f1.a': 'Anda, setelah proyek lunas.',
+        'f2.q': 'Berapa lama satu proyek?', 'f2.a': 'Tergantung apa yang perlu dikerjakan sistemnya. Estimasi kami berikan setelah kebutuhan Anda kami pahami.',
+        'f3.q': 'Berapa biayanya?', 'f3.a': 'Setiap sistem berbeda, jadi harga kami berikan setelah kebutuhan Anda kami pahami.',
+        'f4.q': 'Bisa melanjutkan aplikasi buatan pihak lain?', 'f4.a': 'Kasus per kasus. Tergantung teknologi dan kondisi kodenya.',
+        'f5.q': 'Menerima klien luar negeri?', 'f5.a': 'Ya. Kami bekerja jarak jauh, dalam bahasa Inggris.',
+        'f6.q': 'Apa yang terjadi setelah rilis?', 'f6.a': 'Kami lihat cara sistemnya dipakai, lalu putuskan langkah berikutnya bersama Anda.',
+        'st.h': 'Mulai proyek.', 'st.p': 'Ceritakan bagaimana pekerjaan Anda berjalan hari ini. Beberapa kalimat sudah cukup.',
+        'fl1': 'Nama', 'fl2': 'Email', 'fl3': 'Organisasi', 'opt': '(opsional)', 'fl4': 'Apa yang Anda butuhkan?', 'ph': 'Pesanan masuk lewat chat, stok dicatat di spreadsheet…',
+        'send': 'Kirim', 'note': 'Dikirim ke team@kalastudioai.com. Hanya dipakai untuk membalas Anda.', 'sent': 'Hanya konsep: tidak ada yang terkirim.',
+        'legal': 'PT Kala Studio Digital · Trenggalek, Jawa Timur, Indonesia', 'ft.p': 'Software custom, dirancang dan dibangun oleh satu tim.', 'ft.contact': 'Kontak', 'ft.loc': 'Trenggalek, Jawa Timur, Indonesia', 'ft.priv': 'Privasi', 'ft.terms': 'Syarat', 'cons': 'Dengan mengirim, Anda menyetujui', 'cons.l': 'Kebijakan Privasi kami',
+        'exs': 'Contoh', 'sc.t': 'Chat tim · Trenggalek', 'sc.m1a': 'Staf · 09.10', 'sc.m1': 'Kertas printer hampir habis. Kami butuh 10 rim.', 'sc.m2a': 'Sistem · 09.12', 'sc.m2': 'Permintaan PR-1042 dibuat. Menunggu manajer cabang.',
+        'sr.t': 'aturan-persetujuan', 'sr.1': 'saat', 'sr.2': 'permintaan diajukan', 'sr.3': 'minta persetujuan manajer cabang', 'sr.4': 'lalu kirim ke bagian pembelian', 'sr.5': 'pukul 17.00 masuk ringkasan chat', 'sr.6': '# proses Anda, dituliskan',
+        'sp.who': 'Manajer cabang', 'sp.k': 'Perlu persetujuan', 'sp.b': 'PR-1042 · Kertas printer, 10 rim', 'sp.no': 'Tolak', 'sp.yes': 'Setujui'
+      };
+      var EN = {}, lang = 'en';
+      document.querySelectorAll('[data-t]').forEach(function (el) { EN[el.dataset.t] = el.textContent; });
+      document.querySelectorAll('[data-tp]').forEach(function (el) { EN[el.dataset.tp] = el.placeholder; });
+      document.querySelectorAll('[data-ta]').forEach(function (el) { if (EN[el.dataset.ta] == null) EN[el.dataset.ta] = el.getAttribute('aria-label'); });
+      var Q2 = {
+        en: ['How much did we spend this week?', 'From your purchase requests', '4 requests this week, Rp3.720.000 in total. Largest: office chairs (Blitar), Rp1.700.000.'],
+        id: ['Berapa pengeluaran minggu ini?', 'Dari permintaan pembelian Anda', '4 permintaan minggu ini, total Rp3.720.000. Terbesar: kursi kantor (Blitar), Rp1.700.000.']
+      };
+      function setLang(l) {
+        lang = l; var d = l === 'id' ? ID : EN;
+        document.documentElement.lang = l;
+        document.querySelectorAll('[data-t]').forEach(function (el) { if (d[el.dataset.t] != null) el.textContent = d[el.dataset.t]; });
+        document.querySelectorAll('[data-tp]').forEach(function (el) { if (d[el.dataset.tp] != null) el.placeholder = d[el.dataset.tp]; });
+        document.querySelectorAll('#lang button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.l === l); });
+        document.title = l === 'id' ? 'Kala Studio — Software yang mengikuti proses Anda' : 'Kala Studio — Software that follows your process';
+        var x = document.querySelector('.extra'); if (x.firstChild) answer();
+        document.querySelectorAll('[data-ta]').forEach(function (el) { if (d[el.dataset.ta] != null) el.setAttribute('aria-label', d[el.dataset.ta]); });
+        if (typeof renderWork === 'function' && v4) { renderWork(); renderPos(); } if (typeof renderSvc === 'function' && document.getElementById('svc')) { if (typeof aiRun !== 'undefined') { aiRun++; aiBusy = false; document.getElementById('v5-t').hidden = true; } renderSvc(); }
+      }
+      function answer() {
+        var t = Q2[lang];
+        document.querySelector('.extra').innerHTML = '<div class="msg-u">' + t[0] + '</div><div class="msg-a"><small>' + t[1] + '</small>' + t[2] + '</div>';
+      }
+      /* work: the panel shows the chosen project; the system window beside it switches with it */
+      var WORK = {
+        en: {
+          pos: ['progress', 'Client project · In progress', 'Point of sale', 'For a regional business group that wanted a cashier as simple as the ones every warung uses. We built the core flow and left the rest out.', 'The best decisions were the features we didn’t copy.'],
+          run: ['planning', 'Client project · Planning', 'Runut', 'Operations for a yearbook photo company: student data forms, staged production, export for designers, and personal data protection under Indonesia’s PDP Law.', 'Run one real order through a spreadsheet before building anything.'],
+          fin: ['example', 'Example · not a client project', 'Finance dashboard', 'Money in, money out, and unpaid invoices in one view.', '']
+        },
+        id: {
+          pos: ['progress', 'Proyek klien · Sedang dikerjakan', 'Sistem kasir', 'Untuk grup usaha di daerah yang ingin kasir sesederhana yang dipakai warung pada umumnya. Kami bangun alur intinya dan sengaja meninggalkan sisanya.', 'Keputusan terbaik adalah fitur yang tidak kami salin.'],
+          run: ['planning', 'Proyek klien · Tahap perencanaan', 'Runut', 'Operasional perusahaan foto buku tahunan: form data siswa, produksi bertahap, ekspor untuk desainer, dan perlindungan data pribadi sesuai UU PDP.', 'Jalankan satu pesanan sungguhan lewat spreadsheet sebelum membangun apa pun.'],
+          fin: ['example', 'Contoh · bukan proyek klien', 'Dashboard keuangan', 'Uang masuk, uang keluar, dan tagihan belum dibayar dalam satu tampilan.', '']
+        }
+      };
+      var v4 = document.getElementById('v4'), thBody = document.getElementById('th-body');
+      function renderWork() {
+        var p = v4.dataset.sel, d = WORK[lang][p];
+        thBody.innerHTML = '<span class="st ' + d[0] + '"><i></i>' + d[1] + '</span><h3>' + d[2] + '</h3><p>' + d[3] + '</p>' +
+          (d[4] ? '<div class="lesson"><small>' + (lang === 'id' ? 'Yang kami pelajari' : 'What we learned') + '</small>' + d[4] + '</div>' : '');
+        v4.querySelectorAll('.th-tabs button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.p === p); });
+      }
+      v4.querySelectorAll('.th-tabs button').forEach(function (b) { b.addEventListener('click', function () { v4.dataset.sel = b.dataset.p; renderWork(); }); });
+      /* point of sale: tap items, see the total, pay */
+      var cart = { 'Nasi goreng': [18000, 2], 'Es teh': [5000, 2] }, paid = false;
+      var rp = function (n) { return 'Rp' + n.toLocaleString('id-ID'); };
+      function renderPos() {
+        var total = 0, html = '', id = lang === 'id';
+        Object.keys(cart).forEach(function (k) { var c = cart[k]; total += c[0] * c[1]; html += '<div class="cline"><span>' + c[1] + ' × ' + k + '</span><span class="num">' + rp(c[0] * c[1]) + '</span></div>'; });
+        v4.querySelector('.clines').innerHTML = html || '<div class="cline"><span>' + (id ? 'Ketuk item untuk menambah' : 'Tap an item to add it') + '</span></div>';
+        v4.querySelector('.csum').textContent = rp(total);
+        v4.querySelector('.cpay').textContent = paid ? (id ? 'Lunas · struk dicetak' : 'Paid · receipt printed') : (id ? 'Bayar ' : 'Pay ') + rp(total);
+      }
+      v4.querySelectorAll('.item').forEach(function (b) { b.addEventListener('click', function () { var n = b.dataset.n; if (paid) { cart = {}; paid = false; } cart[n] = cart[n] || [+b.dataset.v, 0]; cart[n][1]++; renderPos(); }); });
+      v4.querySelector('.cpay').addEventListener('click', function () { if (!Object.keys(cart).length) return; cart = {}; paid = true; renderPos(); });
+      /* what we build: small, honest illustrations you can try (sample data, consistent across cards) */
+      var SV = {
+        en: {
+          items: function (n) { return n + (n === 1 ? ' item' : ' items'); }, d7: '+Rp4.200.000 · 7 days', d30: '+Rp11.900.000 · 30 days',
+          steps: [['Submitted', '09:12'], ['Approved', '10:40'], ['Ordered', '13:05'], ['In the 17:00 team summary', '17:00']], now: 'now', ordering: 'Ordering', summary: 'Team summary', next: 'Next step', again: 'Start over',
+          book: 'Book', booked: 'Booked', bookedOn: 'Booked: Sat, 18 Oct · ',
+          qa: [['Which product sold most this week?', 'Kopi susu: 312 cups, mostly between 15:00 and 17:00.'], ['Which branch is busiest today?', 'Trenggalek: 81 of today’s 142 transactions.'], ['What runs out first?', 'Fresh milk, around 18:00 today. Worth ordering before 15:00.']]
+        },
+        id: {
+          items: function (n) { return n + ' item'; }, d7: '+Rp4.200.000 · 7 hari', d30: '+Rp11.900.000 · 30 hari',
+          steps: [['Diajukan', '09.12'], ['Disetujui', '10.40'], ['Dipesan', '13.05'], ['Masuk ringkasan tim 17.00', '17.00']], now: 'sekarang', ordering: 'Sedang dipesan', summary: 'Ringkasan tim', next: 'Langkah berikutnya', again: 'Ulangi',
+          book: 'Pesan', booked: 'Terpesan', bookedOn: 'Terpesan: Sab, 18 Okt · ',
+          qa: [['Produk apa yang paling laku minggu ini?', 'Kopi susu: 312 gelas, paling banyak antara 15.00 dan 17.00.'], ['Cabang mana yang paling ramai hari ini?', 'Trenggalek: 81 dari 142 transaksi hari ini.'], ['Apa yang paling cepat habis?', 'Susu segar, sekitar pukul 18.00 hari ini. Sebaiknya dipesan sebelum 15.00.']]
+        }
+      };
+      var BR = { all: ['Rp4.860.000', 142, 3], tg: ['Rp2.710.000', 81, 1], ta: ['Rp2.150.000', 61, 2] };
+      var SPARK = { '7': 'M0 52 C40 48 60 40 100 42 S170 26 210 30 S270 14 300 12', '30': 'M0 58 C30 50 50 56 80 46 S130 50 160 38 S220 34 250 24 S285 20 300 14' };
+      var svState = { b: 'all', r: '7', step: 0, slot: '10.30', booked: false, q: 0 };
+      var $ = function (id) { return document.getElementById(id); };
+      function press(group, el) { group.querySelectorAll('.vbtn').forEach(function (x) { x.setAttribute('aria-pressed', x === el); }); }
+      function renderSvc() {
+        var t = SV[lang], d = BR[svState.b];
+        $('v1-s').textContent = d[0]; $('v1-t').textContent = d[1]; $('v1-l').textContent = t.items(d[2]);
+        $('v2-d').textContent = svState.r === '7' ? t.d7 : t.d30;
+        $('v2-l').setAttribute('d', SPARK[svState.r]); $('v2-a').setAttribute('d', SPARK[svState.r] + ' L300 70 L0 70Z');
+        var html = '', n = svState.step;
+        t.steps.forEach(function (st, i) {
+          if (i < 2 + n) html += '<div class="vstep' + (i === 1 + n && n > 0 ? ' new' : '') + '"><i>✓</i><b>' + st[0] + '</b><span>' + st[1] + '</span></div>';
+        });
+        if (n === 0) html += '<div class="vstep now"><i>•</i><b>' + t.ordering + '</b><span>' + t.now + '</span></div>';
+        if (n === 1) html += '<div class="vstep now new"><i>•</i><b>' + t.summary + '</b><span>17:00</span></div>';
+        $('v3-f').innerHTML = html; $('v3-b').textContent = n < 2 ? t.next : t.again;
+        $('v4-b').textContent = svState.booked ? t.booked + ' ✓' : t.book + ' · ' + svState.slot; $('v4-b').classList.toggle('done', svState.booked);
+        $('v4-o').textContent = svState.booked ? t.bookedOn + svState.slot : '';
+        $('v5-c').querySelectorAll('.vbtn').forEach(function (b, i) { b.textContent = t.qa[i][0]; });
+        if (!aiBusy) { $('v5-q').textContent = t.qa[svState.q][0]; $('v5-a').textContent = t.qa[svState.q][1]; }
+      }
+      $('v1-b').querySelectorAll('.vbtn').forEach(function (b) { b.addEventListener('click', function () { svState.b = b.dataset.b; press($('v1-b'), b); renderSvc(); }); });
+      $('v2-r').querySelectorAll('.vbtn').forEach(function (b) { b.addEventListener('click', function () { svState.r = b.dataset.r; press($('v2-r'), b); renderSvc(); }); });
+      $('v3-b').addEventListener('click', function () { svState.step = (svState.step + 1) % 3; renderSvc(); });
+      $('v4-s').querySelectorAll('.vbtn').forEach(function (b) { b.addEventListener('click', function () { svState.slot = b.textContent; svState.booked = false; press($('v4-s'), b); renderSvc(); }); });
+      $('v4-b').addEventListener('click', function () { svState.booked = !svState.booked; renderSvc(); });
+      /* AI: user bubble → "reading your data" → answer streams word by word with a caret. Once on first view, then on each question. */
+      var aiBusy = false, aiRun = 0;
+      function askAI() {
+        var run = ++aiRun, t = SV[lang], qa = t.qa[svState.q], q = $('v5-q'), a = $('v5-a'), th = $('v5-t');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { aiBusy = false; th.hidden = true; q.textContent = qa[0]; a.textContent = qa[1]; return; }
+        aiBusy = true; q.textContent = qa[0]; q.classList.remove('pop'); void q.offsetWidth; q.classList.add('pop'); a.textContent = ''; th.hidden = false;
+        setTimeout(function () {
+          if (run !== aiRun) return;
+          th.hidden = true; var words = qa[1].split(' '), i = 0;
+          a.innerHTML = '<span class="vtxt"></span><i class="vcaret" aria-hidden="true"></i>'; var out = a.firstChild;
+          (function next() {
+            if (run !== aiRun) return;
+            if (i >= words.length) { aiBusy = false; a.textContent = qa[1]; return; }
+            out.textContent += (i ? ' ' : '') + words[i++]; setTimeout(next, 45);
+          })();
+        }, 750);
+      }
+      $('v5-c').querySelectorAll('.vbtn').forEach(function (b) { b.addEventListener('click', function () { svState.q = +b.dataset.q; press($('v5-c'), b); renderSvc(); askAI(); }); });
+      if ('IntersectionObserver' in window) {
+        var aiSeen = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { aiSeen.disconnect(); askAI(); } }, { threshold: .6 });
+        aiSeen.observe($('v5-c').closest('.vig'));
+      }
+      var cmp = $('v6'), rng = cmp.querySelector('input');
+      rng.addEventListener('input', function () { cmp.style.setProperty('--x', rng.value + '%'); });
+      /* language: manual choice first, then the browser */
+      var saved = null; try { saved = localStorage.getItem('kala-lang'); } catch (e) { }
+      var nav = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+      setLang(saved || (/^id\b/i.test(nav) ? 'id' : 'en'));
+      document.querySelectorAll('#lang button').forEach(function (b) {
+        b.addEventListener('click', function () { setLang(b.dataset.l); try { localStorage.setItem('kala-lang', b.dataset.l); } catch (e) { } });
+      });
+      /* assistant: a second question, answered in the same thread */
+      var sugg = document.querySelector('.sugg');
+      sugg.addEventListener('click', function () { answer(); sugg.disabled = true; });
+      /* nav border once the page moves */
+      var navEl = document.getElementById('nav');
+      addEventListener('scroll', function () { navEl.classList.toggle('scrolled', scrollY > 8); }, { passive: true });
+      /* hero scene (scrubbed, pinned): the frame settles back while chat, rule and phone arrive.
+         Wide and tall screens only; everything else keeps the static final composition. */
+      if (window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        var mm = gsap.matchMedia();
+        mm.add('(min-width: 900px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)', function () {
+          var scene = document.getElementById('scene');
+          var tl = gsap.timeline({ defaults: { ease: 'power2.out' }, scrollTrigger: { trigger: scene, start: 'center 55%', end: '+=1400', pin: true, scrub: 0.6, anticipatePin: 1 } });
+          tl.to(scene.querySelector('.frame'), { scale: 0.92, ease: 'none', duration: 2.2 }, 0)
+            .from('.sat-chat', { x: -90, y: 24, autoAlpha: 0, duration: 0.6 }, 0.1)
+            .from('.sat-rule', { x: -90, y: 40, autoAlpha: 0, duration: 0.6 }, 0.75)
+            .from('.sat-phone', { x: 90, y: 24, autoAlpha: 0, duration: 0.6 }, 1.4)
+            .to({}, { duration: 0.4 });
+        });
+        document.fonts && document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+      }
+      /* concept form: validate, never send */
+      document.getElementById('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var f = e.target; if (!f.checkValidity()) { f.reportValidity(); return; }
+        f.querySelector('.sent').hidden = false;
+      });
+    })();
+  </script>
+</body>
+
+</html>

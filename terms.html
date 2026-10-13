@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Terms of Use — Kala Studio (draft)</title>
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..700&display=swap" rel="stylesheet">
+  <style>
+    /* Draf Syarat Penggunaan Situs (2026-10-12). Hanya fakta dari BRIEF; isian kuning = data dari Kala. Perlu ditinjau konsultan hukum sebelum terbit. */
+    :root {
+      color-scheme: dark;
+      --base: #16110F;
+      --raised: #1D1714;
+      --over: #251E1A;
+      --line: #352C27;
+      --text: #F3EEEA;
+      --muted: #A89E97;
+      --accent: #9C413D;
+      --accent-text: #E4927F;
+      --focus: #E4927F;
+      --font: "Plus Jakarta Sans", system-ui, sans-serif;
+      --gutter: clamp(16px, 4vw, 40px);
+      --r-pill: 999px;
+      --ease: cubic-bezier(.2, 0, 0, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--base);
+      color: var(--text);
+      font: 400 16px/1.7 var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--accent-text);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding-inline: var(--gutter);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--base);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav .in {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-inline: var(--gutter);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 68px;
+    }
+
+    .wm {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-weight: 700;
+      font-size: 19px;
+      letter-spacing: -.03em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .back {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .back:hover {
+      color: var(--text);
+    }
+
+    .lang {
+      display: inline-flex;
+      padding: 2px;
+      border-radius: var(--r-pill);
+      background: var(--raised);
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+
+    .lang button {
+      position: relative;
+      min-width: 34px;
+      height: 28px;
+      padding: 0 9px;
+      border: 0;
+      border-radius: var(--r-pill);
+      background: none;
+      color: var(--muted);
+      font: 600 11.5px/1 var(--font);
+      letter-spacing: .04em;
+      cursor: pointer;
+    }
+
+    .lang button::after {
+      content: "";
+      position: absolute;
+      inset: -8px -3px;
+    }
+
+    .lang button[aria-pressed="true"] {
+      background: #2B231F;
+      color: var(--text);
+    }
+
+    .draft {
+      margin-top: 40px;
+      padding: 14px 16px;
+      border: 1px solid #6B5A1E;
+      border-radius: 12px;
+      background: hsl(48 60% 20% / .35);
+      color: #F3E3A8;
+      font-size: 14px;
+    }
+
+    h1 {
+      margin: 28px 0 6px;
+      font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+      font-weight: 600;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 36px;
+    }
+
+    h2 {
+      margin: 40px 0 10px;
+      font-size: 20px;
+      letter-spacing: -.015em;
+      font-weight: 600;
+    }
+
+    p,
+    li {
+      color: #D9D2CC;
+      max-width: 64ch;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li+li {
+      margin-top: 6px;
+    }
+
+    .todo {
+      background: #FFF1A8;
+      color: #3B3200;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: .92em;
+    }
+
+    footer {
+      margin-top: 72px;
+      border-top: 1px solid var(--line);
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .logo {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      margin-right: 10px;
+    }
+
+    /* mark only, brand terracotta, no container (owner 2026-10-13) */
+    .logo svg {
+      width: 30px;
+      height: auto;
+      fill: #9C413D;
+    }
+  </style>
+</head>
+
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <path id="kmark"
+        d="M385.1 3.2Q386.7 6.2 393.0 28.2Q399.3 50.2 400.1 51.7Q400.8 53.2 405.5 68.7Q410.2 84.2 415.7 99.7Q421.1 115.2 431.0 140.7Q440.9 166.2 447.5 181.2Q454.1 196.2 461.0 209.7Q468.0 223.2 479.1 243.2Q490.3 263.2 499.7 278.2Q509.1 293.2 520.1 309.2Q531.1 325.2 542.2 339.7Q553.3 354.2 577.3 380.7Q601.2 407.2 624.4 429.0Q647.6 450.8 650.6 452.8Q653.6 454.9 659.1 459.9Q664.6 464.9 678.6 475.9Q692.6 487.0 716.6 503.8Q740.6 520.6 754.7 529.4Q768.8 538.2 768.7 539.2Q768.6 540.2 768.1 540.5Q767.6 540.8 762.1 541.1Q756.6 541.4 750.1 540.6Q743.6 539.8 730.1 539.0Q716.6 538.3 707.6 537.2Q698.5 536.2 693.1 535.0Q687.6 533.8 684.4 533.5Q681.1 533.2 667.4 530.3Q653.6 527.4 637.7 522.3Q621.8 517.2 611.2 512.7Q600.6 508.2 587.6 501.3Q574.6 494.4 565.7 488.8Q556.8 483.2 540.4 470.7Q524.0 458.2 518.1 452.7Q512.1 447.2 497.4 432.2Q482.6 417.2 472.6 405.7Q462.6 394.2 453.1 381.9Q443.6 369.6 432.6 353.9Q421.5 338.2 416.1 329.2Q410.6 320.2 400.5 302.2Q390.4 284.2 388.2 281.7Q386.0 279.2 384.8 278.8Q383.6 278.5 382.1 279.8Q380.6 281.2 370.1 298.2Q359.7 315.2 348.7 331.9Q337.6 348.7 326.6 363.6Q315.6 378.5 303.7 393.3Q291.7 408.2 280.7 420.0Q269.6 431.7 257.6 443.5Q245.6 455.3 235.6 463.8Q225.6 472.2 218.0 477.7Q210.4 483.2 199.3 490.2Q188.1 497.2 174.4 504.2Q160.6 511.2 150.6 515.2Q140.5 519.2 121.4 524.7Q102.4 530.2 94.6 531.7Q86.8 533.2 83.2 533.5Q79.6 533.7 76.6 534.6Q73.6 535.4 62.1 536.9Q50.6 538.4 35.6 539.0Q20.6 539.7 14.1 540.5Q7.6 541.2 4.1 540.9Q0.6 540.6 0.3 539.9Q0.0 539.2 0.6 538.2Q1.2 537.2 7.9 533.0Q14.6 528.8 16.1 527.4Q17.6 526.1 20.6 524.4Q23.6 522.7 38.1 512.7Q52.6 502.6 65.6 493.1Q78.6 483.6 93.1 472.0Q107.6 460.5 124.1 446.1Q140.6 431.8 158.4 414.5Q176.1 397.2 189.1 383.2Q202.1 369.2 214.1 354.2Q226.2 339.2 232.6 330.7Q238.9 322.2 251.5 303.2Q264.2 284.2 276.6 263.2Q289.1 242.2 298.5 224.2Q308.0 206.2 317.6 185.7Q327.2 165.2 338.2 137.7Q349.1 110.2 358.7 80.2Q368.3 50.2 373.0 32.9Q377.6 15.6 378.4 13.9Q379.1 12.2 379.8 8.7Q380.5 5.2 382.0 2.7Q383.5 0.2 383.5 0.2Z" />
+    </defs>
+  </svg>
+  <header class="nav">
+    <div class="in">
+      <a class="wm" href="index.html"><span class="logo" aria-hidden="true"><svg viewBox="0 0 768.8 541.4">
+            <use href="#kmark" />
+          </svg></span>kala studio</a>
+      <a class="back" href="index.html" data-en="Back to home" data-id="Kembali ke beranda">Back to home</a>
+      <div class="lang" id="lang" role="group" aria-label="Language / Bahasa"><button type="button" data-l="en"
+          lang="en" aria-pressed="true">EN</button><button type="button" data-l="id" lang="id"
+          aria-pressed="false">ID</button></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- ENGLISH -->
+    <article lang="en" data-lang="en">
+      <p class="draft"><b>Draft.</b> Not published. Highlighted parts need information from Kala Studio, and the whole
+        page needs a legal review before it goes live.</p>
+      <h1>Terms of Use</h1>
+      <p class="meta">Last updated: <span class="todo">publication date</span></p>
+
+      <h2>About these terms</h2>
+      <p>These terms cover your use of this website, run by PT Kala Studio Digital (“Kala Studio”, “we”), Trenggalek,
+        East Java, Indonesia. They do not cover our project work: every project has its own written agreement.</p>
+
+      <h2>What this website is for</h2>
+      <p>The website explains what we build and how we work, and lets you send us a message. It has no accounts,
+        payments or downloads.</p>
+
+      <h2>Illustrations and sample data</h2>
+      <p>Screens, numbers, names and companies shown on this website are illustrations with sample data, unless a
+        project is clearly labelled as a client project. Client projects are shown with permission and without the
+        client’s name.</p>
+
+      <h2>Information on the website</h2>
+      <p>We keep the information here accurate, but it is general. It is not a quote, an offer or a contract. Prices,
+        timelines and scope are agreed in writing for each project.</p>
+
+      <h2>Our content</h2>
+      <p>The text, design and illustrations on this website belong to Kala Studio. You may share links to the website.
+        Please ask us before reusing its content. <span class="todo">Confirm any exceptions, for example third-party
+          fonts and their licences.</span></p>
+
+      <h2>Messages you send</h2>
+      <p>When you use the contact form, please do not send passwords or other sensitive data. How we handle your message
+        is explained in our <a href="privacy.html">Privacy Policy</a>.</p>
+
+      <h2>Liability</h2>
+      <p><span class="todo">Limitation of liability for use of the website, to be written with legal advice.</span></p>
+
+      <h2>Governing law</h2>
+      <p>These terms are governed by the laws of the Republic of Indonesia. <span class="todo">Court or dispute venue,
+          to be confirmed.</span></p>
+
+      <h2>Changes and contact</h2>
+      <p>If these terms change, we will update this page and the date at the top. Questions: <a
+          href="mailto:team@kalastudioai.com">team@kalastudioai.com</a>.</p>
+    </article>
+
+    <!-- BAHASA INDONESIA -->
+    <article lang="id" data-lang="id" hidden>
+      <p class="draft"><b>Draf.</b> Belum terbit. Bagian yang ditandai perlu informasi dari Kala Studio, dan seluruh
+        halaman perlu ditinjau secara hukum sebelum dipasang.</p>
+      <h1>Syarat Penggunaan</h1>
+      <p class="meta">Terakhir diperbarui: <span class="todo">tanggal terbit</span></p>
+
+      <h2>Tentang syarat ini</h2>
+      <p>Syarat ini berlaku untuk penggunaan website ini, yang dikelola PT Kala Studio Digital (“Kala Studio”, “kami”),
+        Trenggalek, Jawa Timur, Indonesia. Syarat ini tidak mengatur pekerjaan proyek: setiap proyek memiliki perjanjian
+        tertulisnya sendiri.</p>
+
+      <h2>Fungsi website ini</h2>
+      <p>Website ini menjelaskan apa yang kami bangun dan cara kami bekerja, serta memungkinkan Anda mengirim pesan.
+        Tidak ada akun, pembayaran, atau unduhan.</p>
+
+      <h2>Ilustrasi dan data contoh</h2>
+      <p>Tampilan layar, angka, nama, dan perusahaan di website ini adalah ilustrasi dengan data contoh, kecuali proyek
+        yang jelas diberi label proyek klien. Proyek klien ditampilkan dengan izin dan tanpa nama klien.</p>
+
+      <h2>Informasi di website</h2>
+      <p>Kami menjaga informasi di sini tetap akurat, tetapi sifatnya umum. Informasi ini bukan penawaran harga,
+        penawaran resmi, atau kontrak. Harga, jangka waktu, dan cakupan disepakati secara tertulis untuk setiap proyek.
+      </p>
+
+      <h2>Konten kami</h2>
+      <p>Teks, desain, dan ilustrasi di website ini milik Kala Studio. Anda boleh membagikan tautan ke website ini.
+        Mohon minta izin kami sebelum memakai ulang kontennya. <span class="todo">Konfirmasi pengecualian, misalnya font
+          pihak ketiga dan lisensinya.</span></p>
+
+      <h2>Pesan yang Anda kirim</h2>
+      <p>Saat memakai form kontak, mohon jangan mengirim kata sandi atau data sensitif lainnya. Cara kami menangani
+        pesan Anda dijelaskan di <a href="privacy.html">Kebijakan Privasi</a> kami.</p>
+
+      <h2>Tanggung jawab</h2>
+      <p><span class="todo">Batasan tanggung jawab atas penggunaan website, ditulis dengan saran hukum.</span></p>
+
+      <h2>Hukum yang berlaku</h2>
+      <p>Syarat ini tunduk pada hukum Republik Indonesia. <span class="todo">Pengadilan atau forum penyelesaian
+          sengketa, perlu dikonfirmasi.</span></p>
+
+      <h2>Perubahan dan kontak</h2>
+      <p>Bila syarat ini berubah, kami memperbarui halaman ini beserta tanggal di bagian atas. Pertanyaan: <a
+          href="mailto:team@kalastudioai.com">team@kalastudioai.com</a>.</p>
+    </article>
+
+    <footer>© 2026 PT Kala Studio Digital · <a href="privacy.html" data-en="Privacy" data-id="Privasi">Privacy</a> · <a
+        href="terms.html" data-en="Terms" data-id="Syarat">Terms</a></footer>
+  </main>
+
+  <script>
+    (function () {
+      function setLang(l) {
+        document.documentElement.lang = l;
+        document.querySelectorAll('article[data-lang]').forEach(function (a) { a.hidden = a.dataset.lang !== l; });
+        document.querySelectorAll('[data-en]').forEach(function (el) { el.textContent = el.dataset[l]; });
+        document.querySelectorAll('#lang button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.l === l); });
+        document.title = l === 'id' ? 'Syarat Penggunaan — Kala Studio (draf)' : 'Terms of Use — Kala Studio (draft)';
+      }
+      /* same choice as the home page: manual choice first, then the browser */
+      var saved = null; try { saved = localStorage.getItem('kala-lang'); } catch (e) { }
+      var nav = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+      setLang(saved || (/^id\b/i.test(nav) ? 'id' : 'en'));
+      document.querySelectorAll('#lang button').forEach(function (b) {
+        b.addEventListener('click', function () { setLang(b.dataset.l); try { localStorage.setItem('kala-lang', b.dataset.l); } catch (e) { } });
+      });
+    })();
+  </script>
+</body>
+
+</html>
